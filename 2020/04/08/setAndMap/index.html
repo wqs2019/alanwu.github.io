@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>总结ES6中Set和Map数据结构的区别 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JavaScript,ES6,数据结构,Set,map">
+    <meta name="description" content="面试官：你说一下ES6中的数据结构set和map吧！除了这个你还知道WeakSet和WeakMap吗？                                                                                                              01 前言我们刚开始学习ES6的时候肯定会对这两种数据结构感到奇怪，甚至想着">
+<meta property="og:type" content="article">
+<meta property="og:title" content="总结ES6中Set和Map数据结构的区别">
+<meta property="og:url" content="http://blog.alanwu.website/2020/04/08/setAndMap/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="面试官：你说一下ES6中的数据结构set和map吧！除了这个你还知道WeakSet和WeakMap吗？                                                                                                              01 前言我们刚开始学习ES6的时候肯定会对这两种数据结构感到奇怪，甚至想着">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/04/08/setAndMap/1.gif">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/1b0f852d-9afa-496f-8044-898d27846620.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/383ffce0-fe1a-4fb5-9896-7b2f45d6e7aa.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/7a22019c-3a0e-4fdf-9980-04f7e394b6c1.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/5204fd4d-e664-4aa7-9d4e-a89a3dbe1a54.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/04/08/setAndMap/2.gif">
+<meta property="article:published_time" content="2020-04-08T13:20:14.000Z">
+<meta property="article:modified_time" content="2020-04-08T14:14:02.666Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Set">
+<meta property="article:tag" content="map">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/04/08/setAndMap/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">总结ES6中Set和Map数据结构的区别</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">总结ES6中Set和Map数据结构的区别</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-08T13:20:14.000Z" itemprop="datePublished" class="page-time">
+  2020-04-08
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/ES6/">ES6</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-Set"><span class="post-toc-number">2.</span> <span class="post-toc-text">02 Set</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-WeakSet"><span class="post-toc-number">3.</span> <span class="post-toc-text">03 WeakSet</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-Map"><span class="post-toc-number">4.</span> <span class="post-toc-text">04 Map</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#05-WeakMap"><span class="post-toc-number">5.</span> <span class="post-toc-text">05 WeakMap</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#06-小结"><span class="post-toc-number">6.</span> <span class="post-toc-text">06 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-setAndMap"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">总结ES6中Set和Map数据结构的区别</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-08 21:20:14" datetime="2020-04-08T13:20:14.000Z"  itemprop="datePublished">2020-04-08</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/ES6/">ES6</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>面试官：你说一下ES6中的数据结构set和map吧！除了这个你还知道WeakSet和WeakMap吗？</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/04/08/setAndMap/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><p>我们刚开始学习ES6的时候肯定会对这两种数据结构感到奇怪，甚至想着这两种数据结构有什么用呀？难道我们平时的栈和队列不够用吗？</p>
+<p>处于一开始没法理解的我们肯定是先背为敬。当我们逐渐接触的多了，想着数组去重的简便写法的时候这个Set又重新出现在我们的面前。原来这个Set是一个集合，高中我们就学过，集合具有唯一性的特点，这才明白了Set的用意。而Map表面上是地图的意思，地图本就有一一对应的特点，就如我们的字典一样，就是字典的数据结构。</p>
+<h2 id="02-Set"><a href="#02-Set" class="headerlink" title="02 Set"></a>02 Set</h2><p>Set数据结构是一个类似于数组，但是与数组不同的是它具有唯一性，里面的元素都是不重复的，而且他本身也是一个构造函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SetArr = <span class="keyword">new</span> <span class="built_in">Set</span>();</span><br><span class="line"></span><br><span class="line">[<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span>].forEach(<span class="function"><span class="params">item</span>=&gt;</span>SetArr.add(item));</span><br><span class="line"><span class="built_in">console</span>.log(SetArr);</span><br><span class="line"></span><br><span class="line">=&gt;</span><br><span class="line"><span class="number">0</span>: <span class="number">1</span></span><br><span class="line"><span class="number">1</span>: <span class="number">2</span></span><br><span class="line"><span class="number">2</span>: <span class="number">3</span></span><br><span class="line">size: <span class="number">3</span></span><br><span class="line">__proto__: <span class="built_in">Set</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，打印出来的SetArr就变成了唯一的元素了，而且它也具有长度且还有原型，出于好奇我们就打开原型看一下：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://imgkr.cn-bj.ufileos.com/1b0f852d-9afa-496f-8044-898d27846620.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>不出我们所料，它具有一系列的方法，比如我们刚刚使用的add方法都在里面。我们具体来解释一下每个属性和方法：</p>
+<p><strong>实例属性</strong></p>
+<ul>
+<li>constructor：构造函数，就是Set函数</li>
+<li>size：返回的是set实例的长度</li>
+</ul>
+<p><strong>实例方法</strong></p>
+<ul>
+<li>add(value):往Set里面添加值，返回Set本身</li>
+<li>delete(value)：删除某个值，返回布尔值判断是否成功</li>
+<li>has(value):判断是否含有value值，返回布尔值</li>
+<li>clear():清除Set里面的所有值，无返回值</li>
+</ul>
+<p><strong>遍历方法</strong></p>
+<p>Set数据结构也提供了4个遍历方法，可用于遍历里面的成员</p>
+<ul>
+<li>forEach():使用回调函数遍历元素</li>
+<li>entries():返回键值对的遍历器,用于遍历[键名，键值]组成的数组</li>
+<li>values():返回键值遍历器,用于遍历所有键值</li>
+<li>keys():返回键名遍历器,用于遍历所有键名</li>
+</ul>
+<p>看一下我们好像找不出他们的却别，接下来举一个小例子，大家就会明白的。由于Set结构是只有键值的结构，所有keys方法与values方法返回一致。</p>
+<p><code>forEach</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> <span class="built_in">Set</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]);</span><br><span class="line">s.forEach(<span class="function"><span class="params">item</span>=&gt;</span>&#123;<span class="built_in">console</span>.log(item+<span class="number">1</span>)&#125;)</span><br><span class="line"><span class="comment">//2 3 4 5 6</span></span><br></pre></td></tr></table></figure>
+
+<p><code>entries</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s =<span class="keyword">new</span> <span class="built_in">Set</span>([<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> item <span class="keyword">of</span> s.entries())&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br><span class="line">(<span class="number">2</span>) [<span class="string">"a"</span>, <span class="string">"a"</span>]</span><br><span class="line">(<span class="number">2</span>) [<span class="string">"b"</span>, <span class="string">"b"</span>]</span><br><span class="line">(<span class="number">2</span>) [<span class="string">"c"</span>, <span class="string">"c"</span>]</span><br></pre></td></tr></table></figure>
+
+<p><code>values</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s =<span class="keyword">new</span> <span class="built_in">Set</span>([<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> item <span class="keyword">of</span> s.values())&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
+
+<p><code>keys</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s =<span class="keyword">new</span> <span class="built_in">Set</span>([<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'c'</span>])</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> item <span class="keyword">of</span> s.keys())&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">c</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用Set结构实现交并差</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="keyword">new</span> <span class="built_in">Set</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]);</span><br><span class="line"><span class="keyword">let</span> b = <span class="keyword">new</span> Sect([<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]);</span><br><span class="line"><span class="comment">//交集</span></span><br><span class="line"><span class="keyword">let</span> value = <span class="keyword">new</span> <span class="built_in">Set</span>([...a].filter(<span class="function"><span class="params">item</span>=&gt;</span>b.has(item)));</span><br><span class="line"><span class="comment">//并</span></span><br><span class="line"><span class="keyword">let</span> value = <span class="keyword">new</span> <span class="built_in">Set</span>([...a],[...b])</span><br><span class="line"><span class="comment">//差</span></span><br><span class="line"><span class="keyword">let</span> value = <span class="keyword">new</span> <span class="built_in">Set</span>([...a].filter(<span class="function"><span class="params">item</span>=&gt;</span>！b.has(item)));</span><br></pre></td></tr></table></figure>
+
+<h2 id="03-WeakSet"><a href="#03-WeakSet" class="headerlink" title="03 WeakSet"></a>03 WeakSet</h2><p>从字面上的意思看来，它是一个弱的Set结构，具体的弱体现在WeakSet的成员只能是对象，还有一个就是WeakSet的对象都是弱引用，即<code>垃圾回收机制不考虑WeakSet对该对象的引用</code>。也就是说WeakSet里面的引用都不计入垃圾回收机制。</p>
+<p>除了定义不同之外，WeakSet<code>没有size属性</code>，也<code>不可以进行遍历操作</code>，因为它随时会消失，成员不适合引用。如果垃圾回收机制运行过后，成员个数可能不一样。</p>
+<p><strong>方法</strong><br>由于它不可以进行遍历操作，所以遍历的方法都没有了，只有实例方法。</p>
+<ul>
+<li>add():向WeakSet添加新成员</li>
+<li>delete():删除WeakSet的成员</li>
+<li>has():判断WeakSet是否含有某个元素</li>
+</ul>
+<h2 id="04-Map"><a href="#04-Map" class="headerlink" title="04 Map"></a>04 Map</h2><p>上面我们讲到的Set结构是没有键的只有值，而Map结构是键值的组合，这里就解决了我们以往只能使用字符串作为键的限制。也就是说我们可以使用各种的数据类型（或者对象）作为键。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line"><span class="keyword">let</span> obj = &#123;<span class="attr">name</span>:<span class="string">'alan'</span>,<span class="attr">age</span>:<span class="number">20</span>&#125;;</span><br><span class="line">map.set(obj,<span class="string">'这是一些描述'</span>);</span><br><span class="line">map.get(obj);</span><br><span class="line"><span class="built_in">console</span>.log(map);</span><br></pre></td></tr></table></figure>
+<p>我们同样也可以打印一下map里面到底有什么内容，除了与Set一样的方法之外，我们可以看到多了get和set方法。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://imgkr.cn-bj.ufileos.com/383ffce0-fe1a-4fb5-9896-7b2f45d6e7aa.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p><strong>属性</strong></p>
+<ul>
+<li>constructor：Map构造函数</li>
+<li>size：Map元素长度</li>
+</ul>
+<p><strong>实例方法</strong></p>
+<ul>
+<li>set(key, value):设置key所对应的value值</li>
+<li>get(key):获取key所对应的value值，若无则undefined</li>
+<li>has(key)：是否含有某个键</li>
+<li>delete(key):删除某个键，如删除失败返回false</li>
+<li>clear():清除所有成员</li>
+</ul>
+<p><strong>遍历方法</strong></p>
+<ul>
+<li>forEach():使用回调函数遍历成员</li>
+<li>entries():返回所有成员遍历器</li>
+<li>keys():返回键名遍历器</li>
+<li>values():返回键值遍历器</li>
+</ul>
+<p><code>entries</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> <span class="built_in">Map</span>([[<span class="string">'name'</span>,<span class="string">'alan'</span>],[<span class="string">'age'</span>,<span class="string">'20'</span>]]);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> item <span class="keyword">of</span> person.entries())&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://imgkr.cn-bj.ufileos.com/7a22019c-3a0e-4fdf-9980-04f7e394b6c1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p><code>keys</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> <span class="built_in">Map</span>([[<span class="string">'name'</span>,<span class="string">'alan'</span>],[<span class="string">'age'</span>,<span class="string">'20'</span>]]);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> item <span class="keyword">of</span> person.keys())&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//name</span></span><br><span class="line"><span class="comment">//age</span></span><br></pre></td></tr></table></figure>
+
+<p><code>values</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> <span class="built_in">Map</span>([[<span class="string">'name'</span>,<span class="string">'alan'</span>],[<span class="string">'age'</span>,<span class="string">'20'</span>]]);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> item <span class="keyword">of</span> person.keys())&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//alan</span></span><br><span class="line"><span class="comment">//20</span></span><br></pre></td></tr></table></figure>
+
+<p><code>与其他数据结构转换</code></p>
+<ul>
+<li>Map转数组</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> <span class="built_in">Map</span>([[<span class="string">'name'</span>,<span class="string">'alan'</span>],[<span class="string">'age'</span>,<span class="string">'20'</span>]]);</span><br><span class="line"><span class="built_in">console</span>.log(...person)</span><br><span class="line"><span class="comment">//[['name','alan'],['age','20']]</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>数组转Map</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [[<span class="string">'name'</span>,<span class="string">'alan'</span>],[<span class="string">'age'</span>,<span class="string">'20'</span>]];</span><br><span class="line"><span class="keyword">let</span> m = <span class="keyword">new</span> <span class="built_in">Map</span>(arr);</span><br><span class="line"><span class="comment">//Map(2) &#123;"name" =&gt; "alan", "age" =&gt; "20"&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Map转对象</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person = <span class="keyword">new</span> <span class="built_in">Map</span>([[<span class="string">'name'</span>,<span class="string">'alan'</span>],[<span class="string">'age'</span>,<span class="string">'20'</span>]]);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">swap</span>(<span class="params">map</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">let</span> obj = <span class="built_in">Object</span>.create(<span class="literal">null</span>);</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> [key,value] <span class="keyword">of</span> map)&#123;</span><br><span class="line">    obj[key]=value;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> obj</span><br><span class="line">&#125;</span><br><span class="line">swap(person);</span><br><span class="line"><span class="comment">//&#123;name: "alan", age: "20"&#125;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>对象转Map</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> person =&#123;<span class="string">'name'</span>:<span class="string">'alan'</span>,<span class="string">'age'</span>:<span class="string">'20'</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">swap</span>(<span class="params">obj</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">let</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">of</span> <span class="built_in">Object</span>.keys(obj))&#123;</span><br><span class="line">    map.set(key,obj[key]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> map</span><br><span class="line">&#125;</span><br><span class="line">swap(person);</span><br></pre></td></tr></table></figure>
+
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://imgkr.cn-bj.ufileos.com/5204fd4d-e664-4aa7-9d4e-a89a3dbe1a54.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="05-WeakMap"><a href="#05-WeakMap" class="headerlink" title="05 WeakMap"></a>05 WeakMap</h2><p>WeakMap与Map一样可以生成键值对的集合，但是也有不同的地方，主要是有以下的两点：</p>
+<ul>
+<li>WeakMap只接受对象作为键名（不包括null）</li>
+<li>键名所指向的对象不计入垃圾回收机制</li>
+</ul>
+<p>与WeakSet相似，WeakMap也是没有遍历的操作，也没有size属性，没有办法列出所有键名（由于垃圾回收机制的运行），也不能清空。</p>
+<p><strong>实例方法</strong></p>
+<ul>
+<li>get()</li>
+<li>set()</li>
+<li>has()</li>
+<li>delete()</li>
+</ul>
+<h2 id="06-小结"><a href="#06-小结" class="headerlink" title="06 小结"></a>06 小结</h2><p>通过这一次的总结，大家应该对这几种数据结构有了大概的认识，也知道他们之间的不同。之前我们学习的时候往往会忽略WeakSet和WeakMap的理解，也不知道它们与垃圾回收机制的关系。正是以你为弱引用的关系，使得这两个数据的结构可以用于避免内存泄露的情况。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/04/08/setAndMap/2.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-04-08T14:14:02.666Z" itemprop="dateUpdated">2020-04-08 22:14:02</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ES6/" rel="tag">ES6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Set/" rel="tag">Set</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/map/" rel="tag">map</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/04/08/setAndMap/&title=《总结ES6中Set和Map数据结构的区别》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/04/08/setAndMap/&title=《总结ES6中Set和Map数据结构的区别》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/04/08/setAndMap/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《总结ES6中Set和Map数据结构的区别》 — 前端小时&url=http://blog.alanwu.website/2020/04/08/setAndMap/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/04/08/setAndMap/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/04/09/nginx/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">你不知道的Nginx服务器的一些知识</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/04/06/studyMethods/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">如何利用番茄工作法学习与工作</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/04/08/setAndMap/&title=《总结ES6中Set和Map数据结构的区别》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/04/08/setAndMap/&title=《总结ES6中Set和Map数据结构的区别》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/04/08/setAndMap/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《总结ES6中Set和Map数据结构的区别》 — 前端小时&url=http://blog.alanwu.website/2020/04/08/setAndMap/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/04/08/setAndMap/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/04/08/setAndMap/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

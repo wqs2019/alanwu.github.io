@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>服务端小白也能搭建上线系统 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="阿里云,服务端,线上环境,进程守候">
+    <meta name="description" content="服务端小白也能搭建上线系统 继上一篇文章之后，我把开发的系统放到阿里云服务器当中，并且成功上线。                                                                                                                01 前言 继上一篇文章之后，上一次我写的是前端搭建的后台系统如何与本地数据库或">
+<meta property="og:type" content="article">
+<meta property="og:title" content="服务端小白也能搭建上线系统">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/24/vueProject2/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="服务端小白也能搭建上线系统 继上一篇文章之后，我把开发的系统放到阿里云服务器当中，并且成功上线。                                                                                                                01 前言 继上一篇文章之后，上一次我写的是前端搭建的后台系统如何与本地数据库或">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/24/vueProject2/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/24/vueProject2/2.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/24/vueProject2/1.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/24/vueProject2/2.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/24/vueProject2/1.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/24/vueProject2/3.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/24/vueProject2/2.gif">
+<meta property="article:published_time" content="2020-03-24T11:49:37.000Z">
+<meta property="article:modified_time" content="2020-03-24T15:24:51.387Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="阿里云">
+<meta property="article:tag" content="服务端">
+<meta property="article:tag" content="线上环境">
+<meta property="article:tag" content="进程守候">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/24/vueProject2/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">服务端小白也能搭建上线系统</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">服务端小白也能搭建上线系统</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-24T11:49:37.000Z" itemprop="datePublished" class="page-time">
+  2020-03-24
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/">毕业设计</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#服务端小白也能搭建上线系统"><span class="post-toc-number">1.</span> <span class="post-toc-text">服务端小白也能搭建上线系统</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-连接服务器"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 连接服务器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-文件上传"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 文件上传</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#路径引入问题"><span class="post-toc-number">4.0.0.1.</span> <span class="post-toc-text">路径引入问题</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#静态资源引用"><span class="post-toc-number">4.0.0.2.</span> <span class="post-toc-text">静态资源引用</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Nginx代理问题"><span class="post-toc-number">4.0.0.3.</span> <span class="post-toc-text">Nginx代理问题</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-启动项目"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 启动项目</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#05-pm2"><span class="post-toc-number">6.</span> <span class="post-toc-text">05 pm2</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#06-小结"><span class="post-toc-number">7.</span> <span class="post-toc-text">06 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-vueProject2"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">服务端小白也能搭建上线系统</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-24 19:49:37" datetime="2020-03-24T11:49:37.000Z"  itemprop="datePublished">2020-03-24</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%AF%95%E4%B8%9A%E8%AE%BE%E8%AE%A1/">毕业设计</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="服务端小白也能搭建上线系统"><a href="#服务端小白也能搭建上线系统" class="headerlink" title="服务端小白也能搭建上线系统"></a>服务端小白也能搭建上线系统</h2><blockquote>
+<p>继上一篇文章之后，我把开发的系统放到阿里云服务器当中，并且成功上线。</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/24/vueProject2/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>继上一篇文章之后，上一次我写的是前端搭建的后台系统如何与本地数据库或者线上数据库连接的文章，但是我们所有开发的项目不可能是放在本地运行的，怎么也得把它放到服务器上面，让别人也可以通过你的公网地址访问，今天折腾了一下还是挺费劲的，遇到了几个坑，接下来就跟大家说一下如何解决这些问题。</p>
+<p>但是你如果要把项目放到服务器的话肯定是要有一台属于你的服务器，不然的话也没办法做。如果你还没有的话可以去阿里云买一个，学生价也是比较便宜的，一年也就100多。这里我是推荐大家一定要玩一下服务器怎么操作，也是作为前端的必备技能之一，废话少说，开始。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/24/vueProject2/2.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="02-连接服务器"><a href="#02-连接服务器" class="headerlink" title="02 连接服务器"></a>02 连接服务器</h2><hr>
+<p>首先我们购买服务器之后就进行连接一下，关于怎么购买和配置等的内容大家可以网上找一下，很简单的操作。</p>
+<p>我们可以选择一个连接工具，我这里选择的是FinalShell，大家也可以选择其他的。我们先打开软件新建一个链接，输入服务器的公网IP和密码你就可以连接了。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/24/vueProject2/1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>由于服务器大都是使用linux系统，所以大家就必须知道一些linux的指令，方便我们进行文件操作。常用的指令就几种而已，复杂的基本上用不到，作为初学者的我们就了解即可。</p>
+<ul>
+<li>cd 进入某一个文件夹，可以进入多级，如 cd var/www/ 这种</li>
+<li>ls 查看当前的文件夹有哪些文件或者文件夹</li>
+<li>pwd 查看当前你的位置是哪里</li>
+<li>vim xxx 编辑xxx这个文件，进去之后输入i就可以编辑了，完了之后按退出键(esc)，然后输入:wq退出并保存</li>
+<li>cat xxx 查看xxx这个文件</li>
+</ul>
+<p>了解了这些你就可以上手服务器部署了，其实是比较简单的操作，但是有一些删除的指令就不要乱学了，防止小白乱操作整坏了自己的服务器，这个finalshell可以通过右键进行上传或者删除操作，适合入门和那些习惯window的小伙伴。</p>
+<h2 id="03-文件上传"><a href="#03-文件上传" class="headerlink" title="03 文件上传"></a>03 文件上传</h2><hr>
+<p>连接上了之后，基本上和window的操作差不多，你选择一个位置放你的项目，我一般是放在 var/www下面。大家也可以选择你任意的位置，记住放在哪里就好了。</p>
+<h5 id="路径引入问题"><a href="#路径引入问题" class="headerlink" title="路径引入问题"></a><strong>路径引入问题</strong></h5><p>我们在上传之前要对你的项目进行打包，执行npm run build 进行项目的打包，这是你项目上线部署才需要做的，一般我们平时开发都是使用npm run dev 来启动一个本地的服务器。但是你在打包之前要改一些东西，不然你的项目放上去之后是无法访问的。要改哪里呢？</p>
+<p>我们在项目根目录之下有一个config的文件夹，里面有一个index.js的配置文件，修改dev下面的assetsPublicPath的值，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">dev: &#123;</span><br><span class="line">    env: require(<span class="string">'./dev.env'</span>),</span><br><span class="line">    port: process.env.PORT || <span class="number">7999</span>,</span><br><span class="line">    autoOpenBrowser: <span class="keyword">true</span>,</span><br><span class="line">    assetsSubDirectory: <span class="string">'static'</span>,</span><br><span class="line">    assetsPublicPath: <span class="string">'./'</span>,</span><br><span class="line">    proxyTable: &#123;</span><br><span class="line">        <span class="string">'/api'</span>: &#123;</span><br><span class="line">            target: <span class="string">'http://localhost:3000/api'</span>,</span><br><span class="line">            changeOrigin: <span class="keyword">true</span>,</span><br><span class="line">            pathRewrite: &#123;</span><br><span class="line">                <span class="string">'^/api'</span>: <span class="string">''</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+<p>我们平时开发的是 ‘/’ ，现在我们要改成 ‘./’。这个值表示你的项目打包之后，index.html里面引用资源的相对路径。不得不说，这个坑其实我之前就踩过一次，但是没办法之前没有好好总结下来，没有形成总结的习惯，现在我知道写博客的好处了，要是以后我再踩这个坑……不，以后不会了。</p>
+<h5 id="静态资源引用"><a href="#静态资源引用" class="headerlink" title="静态资源引用"></a><strong>静态资源引用</strong></h5><p>我们进行项目打包之后，根目录下面会生成一个dist文件夹，然后我们可以看一下里面的内容，除了一个static和一个html文件其他就没有了。这就是单页应用，最后只导出一个出口。</p>
+<p>我们可以在之前写好的server文件夹下面的index.js文件修改一下，我们之前是使用express框架搭建的，所以我们在部署上去的时候加上：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">'path'</span>);</span><br><span class="line">app.use(express.static(path.join(__dirname, <span class="string">'../dist'</span>)));</span><br></pre></td></tr></table></figure>
+
+<p>这里的意思就是我们引入静态文件的内容，如果没有引用我们的项目也是无法启动的，显示不出什么页面。</p>
+<h5 id="Nginx代理问题"><a href="#Nginx代理问题" class="headerlink" title="Nginx代理问题"></a><strong>Nginx代理问题</strong></h5><p>我们的上线网站是给别人看的，所以我们设置一下代理，让所有的请求都可以定向到你的项目地址。我们配置之前首先要进行一下nginx服务器的安装，在服务器上面也是比较简单的，当然你的服务器也要有node环境才可以，一行命令搞定：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -y nginx</span><br></pre></td></tr></table></figure>
+
+<p>然后安装完成之后我们就去它的配置文件看一下，默认的路径就是在 /etc/nginx/nginx.conf 下面，我们也不用去更改。我们可以通过cat命令查看一下，假如你要进行配置就使用vim命令。这里我们使用vim命令进去，找到server这一地方，像我这里配置：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/24/vueProject2/2.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>server_name就是你的IP地址，也可以写你的域名，不过你要有域名相关的配置和解析，这里我们就暂时不管它。然后我们看到location这里，就是写你的项目放到的地方，我就是放到了var/www/vue-admin下面。修改完了之后我们退出并保存。重启一下nginx服务器，不然可能配置不生效：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service nginx restart</span><br></pre></td></tr></table></figure>
+
+<p>这样配置后我们就可以每次访问这个公网IP+端口之后（默认80端口）就会找你的项目，这样你的项目就会显示了。综上，其实我们就在写bug和找bug之间徘徊。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/24/vueProject2/1.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="04-启动项目"><a href="#04-启动项目" class="headerlink" title="04 启动项目"></a>04 启动项目</h2><hr>
+<p>大家先别急，我们上面是配置了一些东西，但是项目还没有启动的，我们要做的是先安装一下相关的依赖。我们把项目的package.json文件上传到与dist文件夹同级下面，然后执行npm install 就好，如果安装不成功或者网速很慢，大家可以切换到国内的淘宝镜像即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --registry=https://registry.npm.taobao.org</span><br></pre></td></tr></table></figure>
+
+<p>这个过程可能有一点费时间。安装完成之后我们进入server的文件夹，执行node index.js启动我们的服务，它会进行数据库的连接，我们就可以使用写好的接口查询数据库。值得注意的是我们不能使用本地的数据库连接，因为线上是访问不到你的数据库的，最好在服务器上面安装mysql服务器，把数据都导进去里面，关于这部分也比较简单，大家网上查阅一下即可。</p>
+<p>项目启动之后我们我们可以输入你的ip+端口访问你的项目，如12.56.567.789:3000这样。因为它默认的是80端口，我的端口已经被占用了，所以我就采用3000端口，就是server启动后的监听的3000端口，这里你可以改成其他的，但是访问的时候你也要跟着变。</p>
+<p>可能有同学的服务器端口没有开放，导致项目运行不成功，我们可以去到阿里云的控制台看一下，找到安全组配置，开放你的端口就可以了，因为每次搞都比较麻烦，索性我所有端口都开放了。</p>
+<p>如无意外我们就可以看到你自己的项目了，如果有报错或者其他的可以看一下浏览器的控制台。但是到这里我们就会出现一个问题，就是我们如果关闭了服务器我们的server服务就会停止了，这样不行呀，我的页面不可能一直这样挂着。所以我们就使用一个比较牛的东西 pm2 ，叫进程守候。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/24/vueProject2/3.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="05-pm2"><a href="#05-pm2" class="headerlink" title="05 pm2"></a>05 pm2</h2><p>说实话一开始听说这个东西的时候就觉得挺厉害的，因为没有接触过，而且听起来也有点东西。其实当你用起来之后你就会觉得就是安装一个npm包一样的原理。</p>
+<p>首先使用它肯定要进行安装的操作，也是简单的一句命令就搞定了，在 / 目录下面执行下面的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g pm2</span><br></pre></td></tr></table></figure>
+
+<p>然后添加一下到环境变量里面，我们可以这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+<p>在文件的最底部添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NODE_HOME=/root/node-v8.9.1-linux-x64</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$NODE_HOME</span>/bin</span><br></pre></td></tr></table></figure>
+
+<p>退出并保存后重新编译一下这个文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source &#x2F;etc&#x2F;profile</span><br></pre></td></tr></table></figure>
+
+<p>到现在为止我们已经搞定了pm2的安装以及配置过程了，接下来我们就美滋滋地去启动我们的项目了。在server文件夹下面，输入以下的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pm2 start index.js</span><br></pre></td></tr></table></figure>
+
+<p>我们发现即使我们关闭了窗口，程序一样完美运行。到此为止我们的配置以及所有的手续都弄完了，大家也应该顺利完成了自己的项目吧。</p>
+<h2 id="06-小结"><a href="#06-小结" class="headerlink" title="06 小结"></a>06 小结</h2><p>其实回想一下整个过程，说简单也是有一点繁琐，但是这始终是我们都要去尝试一下的操作，我一开始接触的时候连基本的命令都不会，但是没关系，看教程慢慢搞就好，反正坏了你可以重装一下。计算机的同学都应该多折腾一下这种繁琐的配置，因为你以后也会接触的，提前锻炼一下。</p>
+<p>假如一开始我们就顺利地执行下来，我想你已经不是一个小白了，而是变成了服务端老鸟了，如果自己对服务器比较感兴趣的可以多去学习一个一下linux相关的指令，以后转成运维工程师也不是不可。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/24/vueProject2/2.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-24T15:24:51.387Z" itemprop="dateUpdated">2020-03-24 23:24:51</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E7%AB%AF/" rel="tag">服务端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%BF%E4%B8%8A%E7%8E%AF%E5%A2%83/" rel="tag">线上环境</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B%E5%AE%88%E5%80%99/" rel="tag">进程守候</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" rel="tag">阿里云</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/24/vueProject2/&title=《服务端小白也能搭建上线系统》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/24/vueProject2/&title=《服务端小白也能搭建上线系统》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/24/vueProject2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《服务端小白也能搭建上线系统》 — 前端小时&url=http://blog.alanwu.website/2020/03/24/vueProject2/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/24/vueProject2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/25/companyChoose/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">谈一下毕业之后该何去何从</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/23/vueProject/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">教你十分钟搞定毕业设计</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/24/vueProject2/&title=《服务端小白也能搭建上线系统》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/24/vueProject2/&title=《服务端小白也能搭建上线系统》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/24/vueProject2/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《服务端小白也能搭建上线系统》 — 前端小时&url=http://blog.alanwu.website/2020/03/24/vueProject2/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/24/vueProject2/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/24/vueProject2/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

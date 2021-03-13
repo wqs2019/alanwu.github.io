@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Proxy 对象拦截器 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="ES6,proxy,拦截器">
+    <meta name="description" content="Proxy 对象拦截器 “ ES6的对象拦截器，可以拦截哪些情况呢”                                                                                                                01 前言 自从ES6诞生以来，各种新特性也逐渐显现出来，比如ES6中的Proxy对象，是一个重要的技术。之">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Proxy 对象拦截器">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/04/proxy/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="Proxy 对象拦截器 “ ES6的对象拦截器，可以拦截哪些情况呢”                                                                                                                01 前言 自从ES6诞生以来，各种新特性也逐渐显现出来，比如ES6中的Proxy对象，是一个重要的技术。之">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/proxy/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/proxy/2.gif">
+<meta property="article:published_time" content="2020-03-04T04:17:59.000Z">
+<meta property="article:modified_time" content="2020-03-04T07:37:38.093Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="proxy">
+<meta property="article:tag" content="拦截器">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/04/proxy/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Proxy 对象拦截器</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Proxy 对象拦截器</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-04T04:17:59.000Z" itemprop="datePublished" class="page-time">
+  2020-03-04
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/ES6/">ES6</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Proxy-对象拦截器"><span class="post-toc-number">1.</span> <span class="post-toc-text">Proxy 对象拦截器</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-Proxy实例的方法"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 Proxy实例的方法</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#proxy实例的构造"><span class="post-toc-number">3.0.0.1.</span> <span class="post-toc-text">proxy实例的构造</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#1、get"><span class="post-toc-number">3.0.0.2.</span> <span class="post-toc-text">1、get()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#2、set"><span class="post-toc-number">3.0.0.3.</span> <span class="post-toc-text">2、set()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#3、apply"><span class="post-toc-number">3.0.0.4.</span> <span class="post-toc-text">3、apply()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#4、has"><span class="post-toc-number">3.0.0.5.</span> <span class="post-toc-text">4、has()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#5、construct"><span class="post-toc-number">3.0.0.6.</span> <span class="post-toc-text">5、construct</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#6、deleteProperty"><span class="post-toc-number">3.0.0.7.</span> <span class="post-toc-text">6、deleteProperty()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#7、defineProperty"><span class="post-toc-number">3.0.0.8.</span> <span class="post-toc-text">7、defineProperty</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#8、getOwnPropertyDescriptor"><span class="post-toc-number">3.0.0.9.</span> <span class="post-toc-text">8、getOwnPropertyDescriptor</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#9、getPrototypeOf"><span class="post-toc-number">3.0.0.10.</span> <span class="post-toc-text">9、getPrototypeOf()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#10、isExtensible"><span class="post-toc-number">3.0.0.11.</span> <span class="post-toc-text">10、isExtensible()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#11、ownKeys"><span class="post-toc-number">3.0.0.12.</span> <span class="post-toc-text">11、ownKeys()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#12、preventExtensions"><span class="post-toc-number">3.0.0.13.</span> <span class="post-toc-text">12、preventExtensions()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#13、setPrototypeOf"><span class="post-toc-number">3.0.0.14.</span> <span class="post-toc-text">13、setPrototypeOf()</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#14、Proxy-revocable"><span class="post-toc-number">3.0.0.15.</span> <span class="post-toc-text">14、Proxy.revocable()</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-小结"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-proxy"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Proxy 对象拦截器</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-04 12:17:59" datetime="2020-03-04T04:17:59.000Z"  itemprop="datePublished">2020-03-04</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/ES6/">ES6</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Proxy-对象拦截器"><a href="#Proxy-对象拦截器" class="headerlink" title="Proxy 对象拦截器"></a><strong>Proxy 对象拦截器</strong></h2><blockquote>
+<p><strong>“</strong> ES6的对象拦截器，可以拦截哪些情况呢<strong>”</strong></p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/04/proxy/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>自从ES6诞生以来，各种新特性也逐渐显现出来，比如ES6中的Proxy对象，是一个重要的技术。之前Vue的数据双向数据绑定是使用Object.defineProperty()来做的，而现在vue3.0使用的是代理Proxy来编写。原因是前者有一些对象或者数组的变化是监听不了的，但是Proxy可以监听整个对象。</p>
+<p>Proxy可以理解为，当你试图访问一个对象的时候必须先经过一个拦截或者代理，你才可以进行对对象的操作。这种机制的好处就是可以对外界的访问进行过滤和改写。</p>
+<h2 id="02-Proxy实例的方法"><a href="#02-Proxy实例的方法" class="headerlink" title="02 Proxy实例的方法"></a>02 Proxy实例的方法</h2><hr>
+<h5 id="proxy实例的构造"><a href="#proxy实例的构造" class="headerlink" title="proxy实例的构造"></a><strong><font color="red">proxy实例的构造</font></strong></h5><p>ES6提供一个原生的Proxy构造函数，用于生成Proxy实例。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span> ( target, handler ) ;</span><br></pre></td></tr></table></figure>
+
+<p>参数解析：</p>
+<ul>
+<li>target：所要拦截（代理）的对象</li>
+<li>处理函数，拦截对应的操作</li>
+</ul>
+<p>利用Proxy对象可以拦截的方法有一下13种，下面一一来介绍一下。</p>
+<h5 id="1、get"><a href="#1、get" class="headerlink" title="1、get()"></a><strong>1、get()</strong></h5><p>get方法是意思是读取对象，那么相应的拦截就是在读取对象的时候进行拦截。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    name:<span class="string">'alanwu'</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(person, &#123;</span><br><span class="line">    <span class="keyword">get</span>:function(target, property)&#123;</span><br><span class="line">        <span class="keyword">if</span>(property <span class="keyword">in</span> target)&#123;</span><br><span class="line">            <span class="keyword">return</span> target[property]</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'对象属性不存在'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line">proxy.name  <span class="comment">//'alanwu'</span></span><br><span class="line">proxy.age   <span class="comment">//错误</span></span><br></pre></td></tr></table></figure>
+
+<p>假如上述代码访问不存在的属性的时候，没有抛出错误的话就会返回undefined。</p>
+<h5 id="2、set"><a href="#2、set" class="headerlink" title="2、set()"></a><strong>2、set()</strong></h5><p>set拦截操作用于拦截对对象赋值的操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123;</span><br><span class="line">    a: <span class="number">101</span>,</span><br><span class="line">    b: <span class="number">46</span>,</span><br><span class="line">    c: <span class="number">200</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(obj, &#123;</span><br><span class="line">    <span class="keyword">set</span>(target, key, value) &#123;</span><br><span class="line">        <span class="keyword">if</span> (value &lt; <span class="number">100</span>) &#123;</span><br><span class="line">           <span class="keyword">throw</span> <span class="built_in">Error</span>(<span class="string">`<span class="subst">$&#123;value&#125;</span>值不能小于100`</span>)</span><br><span class="line">        &#125; </span><br><span class="line">        target[key] = value</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="3、apply"><a href="#3、apply" class="headerlink" title="3、apply()"></a><strong>3、apply()</strong></h5><p>apply方法用于拦截函数的调用、call、apply操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sum = <span class="function">(<span class="params">num1, num2</span>) =&gt;</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> num1 + num2</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(sum, &#123;</span><br><span class="line">	apply(target, context, args) &#123;</span><br><span class="line">	<span class="comment">// 我们可以通过 Reflect.apply()来调用目标函数</span></span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">Reflect</span>.apply(...arguments) * <span class="number">2</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;)</span><br><span class="line">proxy(<span class="number">3</span>,<span class="number">4</span>)  <span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="4、has"><a href="#4、has" class="headerlink" title="4、has()"></a><strong>4、has()</strong></h5><p>has方法用于拦截hasProperty操作，即判断对象是否具有某个属性时，该方法有效。值得注意的是，对for…in循环是没有效果的。has方法可以判断该属性来自继承的属性，不只是自身的属性。下面是拦截访问私有属性“_prop”</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> handler = &#123;</span><br><span class="line">	has(target, key)&#123;</span><br><span class="line">		<span class="keyword">if</span>(key[<span class="number">0</span>]===<span class="string">'_'</span>)&#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> key <span class="keyword">in</span> target</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> target = &#123;<span class="attr">_prop</span>:<span class="string">'foo'</span>, <span class="attr">prop</span>:<span class="string">'foo'</span>&#125;;</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler)</span><br><span class="line"><span class="string">'_prop'</span> <span class="keyword">in</span> proxy  <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="5、construct"><a href="#5、construct" class="headerlink" title="5、construct"></a><strong>5、construct</strong></h5><p>该方法的本意是构造，所以会拦截 new 操作符命令。该方法接受两个参数：</p>
+<ul>
+<li>target：目标对象</li>
+<li>args：构造函数的参数对象</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> handler = &#123;</span><br><span class="line">	construct (target, args, newTarget)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> target(...args);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> <span class="built_in">Proxy</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;&#125;, &#123;</span><br><span class="line">    construct: <span class="function"><span class="keyword">function</span>(<span class="params">target, argumentsList, newTarget</span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'called: '</span> + argumentsList.join(<span class="string">', '</span>));</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">value</span>: argumentsList[<span class="number">0</span>] * <span class="number">10</span> &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">console</span>.log(<span class="keyword">new</span> p(<span class="number">1</span>).value); <span class="comment">// "called: 1"</span></span><br><span class="line">                               <span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="6、deleteProperty"><a href="#6、deleteProperty" class="headerlink" title="6、deleteProperty()"></a><strong>6、deleteProperty()</strong></h5><p>deleteProperty方法用于拦截delete操作，如果这个方法抛出错误或者返回false，当前属性就无法被delete命令删除。值得注意的是，目标对象自身的不可配置（configurable）的属性不能被deleteProperty方法删除，否则会报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> handler = &#123;</span><br><span class="line">	deleteProperty(target, key)&#123;</span><br><span class="line">		invariant(key, <span class="string">'delete'</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">invariant</span>(<span class="params">key, action</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(key[<span class="number">0</span>]===<span class="string">'_'</span>)&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Invalid attemp to <span class="subst">$&#123;action&#125;</span> private "<span class="subst">$&#123;key&#125;</span>" property`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> target = &#123;<span class="attr">_prop</span>:<span class="string">'foo'</span>&#125;</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br><span class="line"><span class="keyword">delete</span> proxy._prop  <span class="comment">//Error</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="7、defineProperty"><a href="#7、defineProperty" class="headerlink" title="7、defineProperty"></a><strong>7、defineProperty</strong></h5><p>该方法用于拦截Object.defineProperty操作。下面操作添加新的属性会触发defineProperty函数，所以会报错。如果目标对象不可扩展（extensible）或不可写（writable）或不可配置（configurable），也不可添加新属性，否则也会报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> handler = &#123;</span><br><span class="line">	defineProperty(target, key, descriptor)&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> target &#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br><span class="line">proxy.foo = <span class="string">'bar'</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="8、getOwnPropertyDescriptor"><a href="#8、getOwnPropertyDescriptor" class="headerlink" title="8、getOwnPropertyDescriptor"></a><strong>8、getOwnPropertyDescriptor</strong></h5><p>该方法用于拦截Object.getOwnPropertyDescriptor()，返回一个属性描述对象或者undefined。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> handler = &#123;</span><br><span class="line">    getOwnPropertyDescriptor(target, key)&#123;</span><br><span class="line">        <span class="keyword">if</span>(key[<span class="number">0</span>]===<span class="string">'_'</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Object</span>.getOwnPropertyDescriptor(target, key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> target = &#123;<span class="attr">_foo</span>:<span class="string">'bar'</span>, <span class="attr">baz</span>:<span class="string">'tar'</span>&#125;;</span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target, handler);</span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(proxy, <span class="string">'wat'</span>); <span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(proxy, <span class="string">'_foo'</span>); <span class="comment">//undefined</span></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyDescriptor(proxy, <span class="string">'baz'</span>); <span class="comment">//&#123;value:'tar', writable:true,enumerable:true,configurable:true&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="9、getPrototypeOf"><a href="#9、getPrototypeOf" class="headerlink" title="9、getPrototypeOf()"></a><strong>9、getPrototypeOf()</strong></h5><p>该方法用于拦截获取对象的原型。有如下几种情况：</p>
+<ul>
+<li>Object.prototype. __ proto __</li>
+<li>Object.prototype.isPrototypeOf()</li>
+<li>Object.getPrototypeOf()</li>
+<li>Reflect.getPrototypeOf()</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> proto = &#123;&#125;</span><br><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> <span class="built_in">Proxy</span>(&#123;&#125;, &#123;</span><br><span class="line">    getPrototypeOf(target)&#123;</span><br><span class="line">        <span class="keyword">return</span> proto</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Object</span>.getPrototypeOf(p) === proto <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>值得注意的是getPrototype方法返回值必须是对象或者null，否则会报错。目标对象不可扩展（extensible），那么该方法必须返回对象的原型对象。</p>
+<h5 id="10、isExtensible"><a href="#10、isExtensible" class="headerlink" title="10、isExtensible()"></a><strong>10、isExtensible()</strong></h5><p>该方法用于拦截Object.isExtensible()操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> <span class="built_in">Proxy</span>(&#123;&#125;,&#123;</span><br><span class="line">    isExtensible: <span class="function"><span class="keyword">function</span>(<span class="params">target</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>该方法返回值必须是布尔值，否则会转成布尔值。如果返回值与目标对象的IsExtensible(target)不一致，也会抛出错误。</p>
+<h5 id="11、ownKeys"><a href="#11、ownKeys" class="headerlink" title="11、ownKeys()"></a><strong>11、ownKeys()</strong></h5><p>该方法用于拦截对象自身属性的读取操作。可以拦截以下操作：</p>
+<ul>
+<li>Object.getOwnPropertyNames () </li>
+<li>Object.getOwnPropertySymbols () </li>
+<li>Object.keys () </li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> target = &#123;</span><br><span class="line">    a:<span class="number">1</span>,</span><br><span class="line">    b:<span class="number">2</span>,</span><br><span class="line">    c:<span class="number">3</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> handler = &#123;</span><br><span class="line">    ownKeys(target)&#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="string">'a'</span>]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target,handler);</span><br><span class="line"><span class="built_in">Object</span>.keys(proxy) <span class="comment">//['a']</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="12、preventExtensions"><a href="#12、preventExtensions" class="headerlink" title="12、preventExtensions()"></a><strong>12、preventExtensions()</strong></h5><p>该方法拦截 Object.preventExtensions () ，该方法必须返回个布尔值，否则会被自动转为布尔值。只有目标对象不可扩展时，即 Object.isExtensible(proxy)为false， proxy.preventExtensions 才能返回 true ，否则会报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">var p &#x3D;new Proxy(&#123;&#125;, &#123; </span><br><span class="line">	preventExtensions: function(target) &#123; </span><br><span class="line">		return true; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;) </span><br><span class="line">Object.preventExtensions(p) &#x2F;&#x2F;报错</span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="13、setPrototypeOf"><a href="#13、setPrototypeOf" class="headerlink" title="13、setPrototypeOf()"></a><strong>13、setPrototypeOf()</strong></h5><p>该方法主要用于拦截 Object.setPrototypeOf 方法。下面的代码中，只要修改 target 的原型对象就会错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> handler = &#123; </span><br><span class="line">	setPrototypeOf (target, proto) &#123; </span><br><span class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span> (<span class="string">'Changing the prototype is forbidden'</span>); </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> proto = &#123;&#125; ; </span><br><span class="line"><span class="keyword">var</span> target = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;; </span><br><span class="line"><span class="keyword">var</span> proxy = <span class="keyword">new</span> <span class="built_in">Proxy</span>(target , handler) ; </span><br><span class="line"><span class="built_in">Object</span>.setPrototypeOf(proxy, proto );  <span class="comment">//Error : Changing the prototype is forbidden</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h5 id="14、Proxy-revocable"><a href="#14、Proxy-revocable" class="headerlink" title="14、Proxy.revocable()"></a><strong>14、Proxy.revocable()</strong></h5><p>Proxy.revocable 方法返回 一个可取消 Proxy实例。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> target = &#123;&#125;;</span><br><span class="line"><span class="keyword">let</span> handler = &#123;&#125;;</span><br><span class="line"><span class="keyword">let</span> &#123; proxy, revoke &#125; = <span class="built_in">Proxy</span>.revocable(target, handler);</span><br><span class="line">proxy.foo = <span class="number">123</span>;</span><br><span class="line">proxy.foo <span class="comment">//123</span></span><br><span class="line">revoke();</span><br><span class="line">proxy.foo <span class="comment">//TypeError: Revoked</span></span><br></pre></td></tr></table></figure>
+
+<p>Proxy.revocable 方法返回一个对象，其 proxy 属性是 Proxy 实例， revoke 属性是一个函数，可以取消 Proxy 实例。上面的代码中，当执行 revoke 函数后再访问 Proxy 实例，就会抛出一个错误。</p>
+<p>Proxy.revocable 个使用场景是，目标对象不允许直接访问，必须通过代理访问，一旦访问结束，就收回代理权，不允许再次访问。</p>
+<h2 id="03-小结"><a href="#03-小结" class="headerlink" title="03 小结"></a>03 小结</h2><hr>
+<p>上述的实例方法在很多地方都有很大的作用，特别是对对象进行拦截的场景的时候。ES6语法在近年来已经很多使用，特别是vue3.0会使用proxy作为数据的响应式写法。</p>
+<p>一般面试还都会问你Object.defineProperty有什么缺点，然后问你有没有关注vue3.0，知道3.0中的响应式使用什么写法。还有Proxy有什么方法之类的。</p>
+<p><font color="#32CD32">参考文章</font></p>
+<ul>
+<li>阮一峰 ES6入门标准 ——Proxy</li>
+</ul>
+<p><img src="/2020/03/04/proxy/2.gif" alt></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-04T07:37:38.093Z" itemprop="dateUpdated">2020-03-04 15:37:38</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ES6/" rel="tag">ES6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/proxy/" rel="tag">proxy</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8B%A6%E6%88%AA%E5%99%A8/" rel="tag">拦截器</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/04/proxy/&title=《Proxy 对象拦截器》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/04/proxy/&title=《Proxy 对象拦截器》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/04/proxy/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Proxy 对象拦截器》 — 前端小时&url=http://blog.alanwu.website/2020/03/04/proxy/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/04/proxy/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/04/this/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">函数作用域、闭包与this指向问题</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/04/webpack/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">webpack面试常考点——深入浅出webpack</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/04/proxy/&title=《Proxy 对象拦截器》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/04/proxy/&title=《Proxy 对象拦截器》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/04/proxy/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Proxy 对象拦截器》 — 前端小时&url=http://blog.alanwu.website/2020/03/04/proxy/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/04/proxy/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/04/proxy/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

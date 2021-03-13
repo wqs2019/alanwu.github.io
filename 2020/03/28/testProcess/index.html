@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>自己开发的程序有必要自己测试吗 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="测试,开发,代码质量,测试用例,测试原则">
+    <meta name="description" content="自己开发的程序有必要自己测试吗 “程序员的职责就是开发自认为完美的程序，我们自己写的程序是否要自己重新测试一遍呢？”                                                                                                                01 前言 自己最近也在疯狂的输出代码，首先不是因为自己有多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自己开发的程序有必要自己测试吗">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/28/testProcess/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="自己开发的程序有必要自己测试吗 “程序员的职责就是开发自认为完美的程序，我们自己写的程序是否要自己重新测试一遍呢？”                                                                                                                01 前言 自己最近也在疯狂的输出代码，首先不是因为自己有多">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/28/testProcess/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/28/testProcess/1.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/28/testProcess/2.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/28/testProcess/3.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/28/testProcess/2.gif">
+<meta property="article:published_time" content="2020-03-28T12:13:02.000Z">
+<meta property="article:modified_time" content="2020-03-28T15:04:04.810Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="测试">
+<meta property="article:tag" content="开发">
+<meta property="article:tag" content="代码质量">
+<meta property="article:tag" content="测试用例">
+<meta property="article:tag" content="测试原则">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/28/testProcess/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">自己开发的程序有必要自己测试吗</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">自己开发的程序有必要自己测试吗</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-28T12:13:02.000Z" itemprop="datePublished" class="page-time">
+  2020-03-28
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#自己开发的程序有必要自己测试吗"><span class="post-toc-number">1.</span> <span class="post-toc-text">自己开发的程序有必要自己测试吗</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-为什么要自己测试"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 为什么要自己测试</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-自己如何做测试"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 自己如何做测试</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-小结"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-testProcess"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">自己开发的程序有必要自己测试吗</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-28 20:13:02" datetime="2020-03-28T12:13:02.000Z"  itemprop="datePublished">2020-03-28</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="自己开发的程序有必要自己测试吗"><a href="#自己开发的程序有必要自己测试吗" class="headerlink" title="自己开发的程序有必要自己测试吗"></a>自己开发的程序有必要自己测试吗</h2><blockquote>
+<p>“程序员的职责就是开发自认为完美的程序，我们自己写的程序是否要自己重新测试一遍呢？”</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/28/testProcess/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>自己最近也在疯狂的输出代码，首先不是因为自己有多厉害，而是因为毕业设计的相关事情。我知道很多小伙伴都对自己写的代码很有信心，认为经过我手的代码肯定不会出错，肯定是测试坑的我。但是奈何自己没有测试小帮手，唯有身兼数职，一边开发一边测试。</p>
+<p>抛开自己一个人负责的项目来说，很多大公司都会有自己的测试团队，他们会对代码进行完整的测试之后才会上线。但是很多人都会觉得我自己写的代码，有必要自己再测试一遍吗？而且不还有测试工程师吗？这里有一个很搞笑的问题，万一系统上线之后，出现问题该是谁来背锅？开发人员说都是测试的责任，没有测试出来错误；但是测试人员就说都是开发，代码写得不好。所以这里到底是谁的锅我们就有点难判断了。</p>
+<p>所以为了避免这种事情发生，我们开发人员退一步，自己开发的代码先自己测试一遍，看功能是否正常，逻辑是否有问题，然后我们再交给测试，这样的愉快过程对大家都好。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/28/testProcess/1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="02-为什么要自己测试"><a href="#02-为什么要自己测试" class="headerlink" title="02 为什么要自己测试"></a>02 为什么要自己测试</h2><hr>
+<p>我们自己来测试自己的程序首先肯定是基于我们自己是对程序最熟悉的人员，别人不可能知道我们代码的每一个部分的内容。我们这里基于几个方面来说，第一是测试人员是否可靠，第二是第三方代码是否可靠，第三是产品迭代的质量保证。</p>
+<ul>
+<li>测试人员</li>
+</ul>
+<p>这里的测试人员就是测试工程师，测试开发人员会把用户所有操作可能出现的情况都跑一边，这里能否保证测试的质量、能否找出bug就是测试用例是否完善。我们如果在leetcode上面刷题的话就知道，他都会有一个测试用例库在里面，只有你完全通过之后才算你的程序没有问题，一般我们着重考虑的就是边界情况和特殊情况。举一个简单的例子，也是我最近的做的一个修改初始密码的功能。大家可以想一下用户有哪几种操作？</p>
+<p>为什么要这样说呢？因为我们写的程序一开始就要一套用户逻辑在里面，就相当于我们自己限定了一套流程，觉得用户理应是这么操作的。但是用户不是开发，他们有可能出现很多种操作情况，我们都要一一覆盖完全。比如用户可以不输密码，用户可以只输原始密码没有输入新密码就提交，或者旧密码错误你就不能让他改了，万一他不是本人操作呢？所以我们都每一种情况都是试一下，保证用户的操作不会超出自己的范围外。</p>
+<p>测试是有一套工具的，测试人员是没有比我们更熟悉的程序的，所以第一个考虑的问题就是我们一定要对自己的程序负第一责任，这锅该背的时候还是得背。</p>
+<ul>
+<li>第三方代码</li>
+</ul>
+<p>我们现在，就前端来说已经是偏向工程化的时代，页面已经不是单纯的html+css或者div+css开发模式这么简单了。我们熟知的npm包管理工具已经有几万个代码包，很多时候我们并不能判断这些代码库是否安全，直接npm install就完事了。但是这里一般来说也不是什么大问题，毕竟大家都在用这里面的代码和集成的方法，可是万一某个包被人参杂了一些不合法的程序怎么办呢？我们的项目一般都是依赖很多组件或者页面的，一旦出了问题那就是很严重的情况了。</p>
+<p>假如大家为了安全起见可以去了解一下源代码，看一下是否其中藏着什么猫腻。但是我一般不会去看，因为看不懂。一般来说一些常用的包是没有问题的，有问题一早就反应出来了，而且我们用的一般都是常用的，比如vue，vue-router，vuex，element-ui等，常用的基本上都没有问题。</p>
+<p>所以第二个方面就是检查一下第三方包是否靠谱（假如有能力），因为第三包出了问题，测试或者开发员人可能都难以准确定位问题出在哪，更难以解决了。</p>
+<ul>
+<li>产品迭代</li>
+</ul>
+<p>第三个就是我们的产品迭代方面，可能有些项目还没有上线就凉了或者我开发出来的版本就不打算长期迭代了，这种情况我们就另说了。一般来说我们的产品都是长期迭代的，如何保证后续的开发顺利和产品的质量？首先肯定是我们的基础层面做的好，平台没有做好我们是很难向下发展的。代码是否向下兼容，接口升级有没有问题，这些我们都要保质保量。做到随时进行代码移植、随时小功能上线，随时合并项目等。</p>
+<p>这些过程可能在早期来说比较耗费时间和精力，但是想想以后你项目出现问题找bug的时间根本不算什么，而且你的项目早期做的越好，以后的排查难度会降低很多，问题也可以非常快速的定位。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/28/testProcess/2.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="03-自己如何做测试"><a href="#03-自己如何做测试" class="headerlink" title="03 自己如何做测试"></a>03 自己如何做测试</h2><hr>
+<p>说了这么多，那我们到底该如何测试自己的代码呢？换句话来说我们测试应该要遵循什么样的原则呢？</p>
+<ul>
+<li>单一职责</li>
+</ul>
+<p>我们测试某一个功能肯定是从最小的功能做起，测试是否有问题，就像函数一样，只做一件事情。一旦我们的代码比较多的时候，测试就难以进行了，可能因为功能之间相互引用，假如某环节出了问题你也不知道从哪里推测出来。</p>
+<p>最近我也在写node相关的后台接口，我发现一个简单的数据库接口查询都是要分开很多个文件来写的，可以分为数据库配置文件以用来配置数据库的地址、端口、用户名密码等，还有一个文件用来接收sql语句写连接查询，还有一个文件用来写某一个接口的sql语句，还有用来写接口路由的，最后都集合到index.js当中开启服务。</p>
+<p>整一个流程下来我们难免会有多个文件，但是我们把耦合性降到了最低。以后我们修改接口名称或者新增接口都是十分地方便，也容易排查错误。所以我们测试也要做到单一职责的则是，一次只做一个功能，如webpack中的loader一样。</p>
+<ul>
+<li>用例完整</li>
+</ul>
+<p>按照正常的逻辑思维来说，我们的程序大部分情况下都不会有问题，一般出现问题的就是一些边缘情况，我们称之为特殊值或者边界情况。比如我们常见的数组下标越界都是这种情况，这种情况涉及的问题可大可小，堆栈溢出实际上是很严重的问题，不要小看这一个下标，可能会覆盖正常的数据或者读取非法数据。</p>
+<p>所以我们一定要保证测试的用例在我们可控的范围之内，否则就会有问题，数据的完整性就是指数据不能多也不能少。通过不断地添加测试用例，将会不断覆盖代码的分支和不同的情况。</p>
+<p>我觉得上面这两种原则已经可以涵盖大部分的情况了，剩下的情况我们可以考虑一些性能测试，压力测试等方面的内容。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/28/testProcess/3.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="04-小结"><a href="#04-小结" class="headerlink" title="04 小结"></a>04 小结</h2><hr>
+<p>测试的意义就在于，用户消费产出的代码之前，开发者先消费它，给予其重要的质量保证。——《深入浅出Node.js》</p>
+<p>今天我们聊了关于程序产出之后，我们是否应该进行先测试，答案相信大家已经有了。很多时候我与上线成功就只差一个测试，大家其实应该也要考虑开发环境与线上环境的问题，因为开发没有任何问题，部署之后却死活不行。因为线上环境很特殊，不仅考虑网络是否流畅，是否有阻塞的情况，线上代码资源文件的地址是否错误等，而且还要考虑线上环境代码走的分支也是不一样的。</p>
+<p>举个简单的例子，我们在vue项目设置代理的时候一般都是在proxyTable下面进行设置，但是这里只是开发环境的情况，线上环境却是不走这里的，要想我们的接口生效我们可以去配置nginx进行反向代理，这又是另一种情况了。只是为了告诉大家，测试很重要，上线测试更重要。</p>
+<p><img src="/2020/03/28/testProcess/2.gif" alt></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-28T15:04:04.810Z" itemprop="dateUpdated">2020-03-28 23:04:04</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E8%B4%A8%E9%87%8F/" rel="tag">代码质量</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BC%80%E5%8F%91/" rel="tag">开发</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95%E5%8E%9F%E5%88%99/" rel="tag">测试原则</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B/" rel="tag">测试用例</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/28/testProcess/&title=《自己开发的程序有必要自己测试吗》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/28/testProcess/&title=《自己开发的程序有必要自己测试吗》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/28/testProcess/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《自己开发的程序有必要自己测试吗》 — 前端小时&url=http://blog.alanwu.website/2020/03/28/testProcess/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/28/testProcess/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/31/howToFindJobs/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">应届生小白如何找一份靠谱工作</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/26/jwtToken/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">如何使用JWT做简单的登录验证操作</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/28/testProcess/&title=《自己开发的程序有必要自己测试吗》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/28/testProcess/&title=《自己开发的程序有必要自己测试吗》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/28/testProcess/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《自己开发的程序有必要自己测试吗》 — 前端小时&url=http://blog.alanwu.website/2020/03/28/testProcess/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/28/testProcess/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/28/testProcess/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

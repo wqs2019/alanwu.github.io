@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>你还在使用原生开发小程序吗 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="小程序,mpvue">
+    <meta name="description" content="最近帮别人在做一个小程序,因为官方的支持不够好,组件库也不够多,所以就没有使用官方的操作。网上查找了一番，觉得mpvue还不错（之前也没玩过），索性拿来用吧！                                                                                                               01 前言小程序的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你还在使用原生开发小程序吗">
+<meta property="og:url" content="http://blog.alanwu.website/2020/04/18/mpvue/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="最近帮别人在做一个小程序,因为官方的支持不够好,组件库也不够多,所以就没有使用官方的操作。网上查找了一番，觉得mpvue还不错（之前也没玩过），索性拿来用吧！                                                                                                               01 前言小程序的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/04/18/mpvue/1.gif">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/04476daa-209b-4a1c-a21b-686ad3a103fe.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/66f1a5dc-90e1-4aa9-bfd2-f6b7215b3056.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/6be46cf5-4cdf-47a7-a575-34bcb446ba25.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/0c65e9b8-5cde-43ca-8694-8559c40174c8.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/a19b7e1e-b053-45b1-8c96-517408a792e1.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/7a16cb6b-b678-495f-a625-e5ef1b58d1c3.png">
+<meta property="og:image" content="https://imgkr.cn-bj.ufileos.com/a07d938c-c7d8-4201-82b8-f9d5247a1091.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/04/18/mpvue/2.gif">
+<meta property="article:published_time" content="2020-04-18T13:51:22.000Z">
+<meta property="article:modified_time" content="2020-04-18T13:55:32.220Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="小程序">
+<meta property="article:tag" content="mpvue">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/04/18/mpvue/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">你还在使用原生开发小程序吗</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">你还在使用原生开发小程序吗</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-04-18T13:51:22.000Z" itemprop="datePublished" class="page-time">
+  2020-04-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-自定义tabbar"><span class="post-toc-number">2.</span> <span class="post-toc-text">02 自定义tabbar</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#自定义组件"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">自定义组件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#使用方式"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">使用方式</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-组合使用Vant"><span class="post-toc-number">3.</span> <span class="post-toc-text">03 组合使用Vant</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-遇到的小坑"><span class="post-toc-number">4.</span> <span class="post-toc-text">04 遇到的小坑</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#05-小结"><span class="post-toc-number">5.</span> <span class="post-toc-text">05 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-mpvue"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">你还在使用原生开发小程序吗</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-04-18 21:51:22" datetime="2020-04-18T13:51:22.000Z"  itemprop="datePublished">2020-04-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>最近帮别人在做一个小程序,因为官方的支持不够好,组件库也不够多,所以就没有使用官方的操作。网上查找了一番，觉得mpvue还不错（之前也没玩过），索性拿来用吧！</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/04/18/mpvue/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><p>小程序的做法也是比较简单的，假如你是老手的话基本上开箱即用，但是奈何自己技术不够，那就手把手教你踩坑吧。</p>
+<p>之前也做过几个小程序，我用过<code>官方的</code>、<code>uni-app</code>开发，效果还行。然后现在是想尝试一下<code>mpvue</code>，生态还可以，组件库也多。拿到设计图的时候觉得还可以，但是一看好像还是有点东西的。</p>
+<h2 id="02-自定义tabbar"><a href="#02-自定义tabbar" class="headerlink" title="02 自定义tabbar"></a>02 自定义tabbar</h2><p>我看到了页面是有一个自定义tabbar的，自己之前没有做做过这种，都是直接在app.json文件里面配置的，简单高效不带坑。虽然说官方支持<code>自定义tabbar</code>的功能，但是我和官方的意思就不是同一个频道的。这是我拿到的<code>原型图</code>：</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/04476daa-209b-4a1c-a21b-686ad3a103fe.png" alt="原型图"></p>
+<p>一开始好像是有点蒙，但是谷歌了一下其实还有救。思想就是把原生的tabbar隐藏，然后把你自定义的tabbar放上去即可。</p>
+<ul>
+<li>在app.json配置tabbar，因为后面要跳转（不配置报错）</li>
+<li>新建一个mytabbar.vue文件，写自己的tabbar</li>
+<li>在app.vue的onShow的时候隐藏原生的tabbar,<code>wx.hideTabBar();</code></li>
+</ul>
+<p>这样其实就好了，但是需要tabbar的页面都要引入自己的组件，talk is cheap，接下来就开始实现自己的组件吧。</p>
+<h3 id="自定义组件"><a href="#自定义组件" class="headerlink" title="自定义组件"></a>自定义组件</h3><p><strong>模板部分</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">section</span> <span class="attr">class</span>=<span class="string">"tabBar-wrap"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">article</span> <span class="attr">class</span>=<span class="string">"tabBar-box"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ul</span> <span class="attr">class</span>=<span class="string">"tabBar-nav"</span> <span class="attr">v-if</span>=<span class="string">"navList.length &gt; 0"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span></span></span><br><span class="line"><span class="tag">          <span class="attr">class</span>=<span class="string">"item"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">v-for</span>=<span class="string">"(item, index) in navList"</span></span></span><br><span class="line"><span class="tag">          @<span class="attr">click</span>=<span class="string">"selectNavItem(index,item.pagePath)"</span></span></span><br><span class="line"><span class="tag">          <span class="attr">:key</span>=<span class="string">"index"</span></span></span><br><span class="line"><span class="tag">        &gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">p</span> <span class="attr">class</span>=<span class="string">"item-images"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">img</span></span></span><br><span class="line"><span class="tag">              <span class="attr">:src</span>=<span class="string">"selectNavIndex === index ? item.selectedIconPath : item.iconPath"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">alt</span>=<span class="string">"iconPath"</span></span></span><br><span class="line"><span class="tag">            /&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">p</span></span></span><br><span class="line"><span class="tag">            <span class="attr">:class</span>=<span class="string">"selectNavIndex === index ? 'item-text item-text-active' : 'item-text' "</span></span></span><br><span class="line"><span class="tag">          &gt;</span>&#123;&#123;item.text&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">v-if</span>=<span class="string">"needButton"</span> <span class="attr">style</span>=<span class="string">"flex: 2"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"submit-box"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">button</span></span></span><br><span class="line"><span class="tag">              <span class="attr">v-if</span>=<span class="string">"btnText==='抽大礼'"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">:disabled</span>=<span class="string">"!handButton"</span></span></span><br><span class="line"><span class="tag">              @<span class="attr">click</span>=<span class="string">"bindNavigateTo('../game/main')"</span></span></span><br><span class="line"><span class="tag">              <span class="attr">:class</span>=<span class="string">"handButton ? 'submit-box-btn submit-box-btn-active' : 'submit-box-btn' "</span></span></span><br><span class="line"><span class="tag">            &gt;</span>&#123;&#123; btnText &#125;&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">article</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">section</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>逻辑部分</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  props: [<span class="string">"selectNavIndex"</span>, <span class="string">"needButton"</span>, <span class="string">"handButton"</span>, <span class="string">"btnText"</span>],</span><br><span class="line">  data() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      navList: [</span><br><span class="line">        &#123;</span><br><span class="line">          pagePath: <span class="string">"../index/main"</span>,</span><br><span class="line">          iconPath: <span class="string">"../../static/tabs/home.png"</span>,</span><br><span class="line">          selectedIconPath: <span class="string">"../../static/tabs/home-active.png"</span>,</span><br><span class="line">          text: <span class="string">"首页"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          pagePath: <span class="string">"../share/main"</span>,</span><br><span class="line">          iconPath: <span class="string">"../../static/tabs/home.png"</span>,</span><br><span class="line">          selectedIconPath: <span class="string">"../../static/tabs/home-active.png"</span>,</span><br><span class="line">          text: <span class="string">"分享"</span></span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">          pagePath: <span class="string">"../center/main"</span>,</span><br><span class="line">          iconPath: <span class="string">"../../static/tabs/home.png"</span>,</span><br><span class="line">          selectedIconPath: <span class="string">"../../static/tabs/home-active.png"</span>,</span><br><span class="line">          text: <span class="string">"我的"</span></span><br><span class="line">        &#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    selectNavItem(index, pagePath) &#123;</span><br><span class="line">      <span class="keyword">if</span> (index === <span class="keyword">this</span>.selectNavIndex) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">this</span>.bindViewTap(pagePath);</span><br><span class="line">    &#125;,</span><br><span class="line">    bindNavigateTo(url) &#123;<span class="comment">//不是tabbar的页面跳转方式</span></span><br><span class="line">      wx.navigateTo(&#123;</span><br><span class="line">        url</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">    bindViewTap(url) &#123;<span class="comment">//tabbar页面的跳转方式</span></span><br><span class="line">      wx.switchTab(&#123;</span><br><span class="line">        url</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">&lt;<span class="regexp">/script&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>样式部分</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.tabBar-box</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">50px</span>;</span><br><span class="line">  <span class="attribute">padding</span>: <span class="number">10</span>rpx <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">border-top</span>: <span class="number">1px</span> solid <span class="number">#eee</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#eb8c2b</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.tabBar-nav</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">display</span>: flex;</span><br><span class="line">  <span class="attribute">justify-content</span>: center;</span><br><span class="line">  <span class="attribute">align-items</span>: baseline;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item</span> &#123;</span><br><span class="line">  <span class="attribute">flex</span>: <span class="number">1</span>;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item-text</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#666</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">14px</span>;</span><br><span class="line">  <span class="attribute">font-weight</span>: bold;</span><br><span class="line">  <span class="attribute">transition</span>: <span class="number">0.24s</span> linear;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item-text-active</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fec754</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.item-images</span> &#123;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">transition</span>: <span class="number">0.24s</span> linear;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">img</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">60</span>rpx;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">60</span>rpx;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.submit-box-btn</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">z-index</span>: <span class="number">999</span>;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">70%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">80</span>rpx;</span><br><span class="line">  <span class="attribute">line-height</span>: <span class="number">80</span>rpx;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">50</span>rpx;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#404040</span>;</span><br><span class="line">  <span class="attribute">font-size</span>: <span class="number">20px</span>;</span><br><span class="line">  <span class="attribute">font-weight</span>: bold;</span><br><span class="line">  <span class="attribute">border</span>: none;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#eee</span>;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#eee</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.submit-box-btn-active</span> &#123;</span><br><span class="line">  <span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">  <span class="attribute">border</span>: none;</span><br><span class="line">  <span class="attribute">border</span>: <span class="number">1px</span> solid <span class="number">#fca542</span>;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#fca542</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-tag">button</span> &#123;</span><br><span class="line">  <span class="attribute">border</span>: none;</span><br><span class="line">  <span class="attribute">outline</span>: none;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>使用方式也很简单，直接把它引入进来，然后注册一下就可以了。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mytabbar <span class="keyword">from</span> <span class="string">"@/components/mytabbar"</span>;</span><br><span class="line"></span><br><span class="line">components: &#123;</span><br><span class="line">    mytabbar</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<p>在你的页面里面放上组件：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mytabbar</span></span></span><br><span class="line"><span class="tag">      <span class="attr">:needButton</span>=<span class="string">"needButton"</span> </span></span><br><span class="line"><span class="tag">      <span class="attr">:btnText</span>=<span class="string">"btnText"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">:handButton</span>=<span class="string">"handButton"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">:selectNavIndex</span>=<span class="string">"selectNavIndex"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">mytabbar</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>needButton:是否需要一个button，就像我这里就需要了</li>
+<li>btnText：button里面的文字显示，因为可能另一个页面显示不一样</li>
+<li>handButton：点击button的逻辑</li>
+<li>selectNavIndex：需要高亮的下标，每个页面的高亮不一样</li>
+</ul>
+<p><img src="https://imgkr.cn-bj.ufileos.com/66f1a5dc-90e1-4aa9-bfd2-f6b7215b3056.png" alt="最后实现"></p>
+<h2 id="03-组合使用Vant"><a href="#03-组合使用Vant" class="headerlink" title="03 组合使用Vant"></a>03 组合使用Vant</h2><p>自己造轮子很麻烦，就用别人的组件库好了。看了一下Vant还不错，而且别人也尝试过使用vant+mpvue的开发模式，坑还是自己踩一边的好。</p>
+<p>首先我遇到的第一个问题就是如何引入组件库，虽然官方的做法是直接安装，但是我安装之后发现老是找不到路径，没办法只好放弃。我现在采用的是<code>直接引入本地的</code>方式进行，虽然每一次编译都要一点时间，但是还好。以后上线的时候把没用的组件删除就好，保留你需要使用的组件（按需引入）</p>
+<p>下载整个仓库之后把里面的<code>dist文件夹</code>下面的所有文件复制到你的项目，<code>static/vant</code>当中，以后使用就从这里引入好了，使用的时候还是在app.json里面配置(<code>与pages同级</code>)：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">"usingComponents": &#123;</span><br><span class="line">    "van-button": "/static/vant/button/index",</span><br><span class="line">    "van-tab": "/static/vant/tab/index",</span><br><span class="line">    "van-tabs": "/static/vant/tabs/index",</span><br><span class="line">    "van-nav-bar": "/static/vant/nav-bar/index",</span><br><span class="line">    "van-icon": "/static/vant/icon/index",</span><br><span class="line">    "van-row": "/static/vant/row/index",</span><br><span class="line">    "van-col": "/static/vant/col/index",</span><br><span class="line">    "van-dialog": "/static/vant/dialog/index",</span><br><span class="line">    "van-field": "/static/vant/field/index",</span><br><span class="line">    "van-area": "/static/vant/area/index",</span><br><span class="line">    "van-popup": "/static/vant/popup/index",</span><br><span class="line">    "van-picker": "/static/vant/picker/index"</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<p>这样其实就可以了，写页面的时候直接按照它的文档写就好了。</p>
+<h2 id="04-遇到的小坑"><a href="#04-遇到的小坑" class="headerlink" title="04 遇到的小坑"></a>04 遇到的小坑</h2><p><strong>自定义NavBar</strong></p>
+<p>因为UI图上面的导航有自定义的样式，没办法只好使用vant的<code>van-nav-bar</code>，但是我使用slot的时候发现左边的图标点击不了。</p>
+<p>文档上面是使用<code>bind:click-left</code>的方式，但是没用，其实正确的写法应该是：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">van-nav-bar</span> <span class="attr">title</span>=<span class="string">"我的"</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">van-icon</span> <span class="attr">name</span>=<span class="string">"wap-home"</span> <span class="attr">slot</span>=<span class="string">"left"</span> @<span class="attr">click</span>=<span class="string">"toHome"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">van-nav-bar</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>图片背景</strong></p>
+<p>使用图片背景的时候，发现报错说不可以引用本地的图片，使用base64或者网络图片。但是我使用网络图片发现报了403错误，没有权限。索性就使用了base64的方式。虽然不太接受这种方式，因为转出来的字符串很长。</p>
+<p><strong>获取定位</strong></p>
+<p>首页需要有一个获取定位的功能。但是看了一下小程序的官方文档只能获取到经纬度。这里我就使用了第三方的接口，去腾讯位置服务平台注册一下，可以使用经纬度逆向解析地址的功能。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/6be46cf5-4cdf-47a7-a575-34bcb446ba25.png" alt></p>
+<p>然后里面有一个逆地址解析的功能，使用经纬度作为参数就可以获取了。但是开始你要去app.json配置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在app.json中配置权限</span></span><br><span class="line"><span class="string">"permission"</span>: &#123;</span><br><span class="line">    <span class="string">"scope.userLocation"</span>: &#123;</span><br><span class="line">      <span class="string">"desc"</span>: <span class="string">"您的位置信息将用于搜索银行信息,以帮助您填写正确的支行信息"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://imgkr.cn-bj.ufileos.com/0c65e9b8-5cde-43ca-8694-8559c40174c8.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>实例代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">wx.getLocation(&#123;</span><br><span class="line">      type: <span class="string">"wgs84"</span>, <span class="comment">// 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标</span></span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"定位成功"</span>,res);</span><br><span class="line">        <span class="keyword">var</span> locationString = res.latitude + <span class="string">","</span> + res.longitude;</span><br><span class="line">        wx.request(&#123;</span><br><span class="line">          url: <span class="string">"http://apis.map.qq.com/ws/geocoder/v1/?l&amp;get_poi=1"</span>,</span><br><span class="line">          data: &#123;</span><br><span class="line">            key: <span class="string">"xxxxx-xxxxx-xxxxx-xxxx-xxxxx-xxxxx"</span>,<span class="comment">//你自己的key,页面上有</span></span><br><span class="line">            location: locationString</span><br><span class="line">          &#125;,</span><br><span class="line">          method: <span class="string">"GET"</span>,</span><br><span class="line">          success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"请求成功"</span>,res);<span class="comment">//这里就可以获取你的地址了</span></span><br><span class="line">          &#125;,</span><br><span class="line">          fail: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"请求失败"</span>);</span><br><span class="line">          &#125;,</span><br><span class="line">          complete: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">"请求完成"</span>);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;,</span><br><span class="line">      fail: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"定位失败"</span>);</span><br><span class="line">      &#125;,</span><br><span class="line">      complete: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"定位完成"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>但是你会发现也有一些小问题，比如一开始说你的合法域名问题。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/a19b7e1e-b053-45b1-8c96-517408a792e1.png" alt><br>然后你就可以去你的项目配置那里勾上<code>不检验合法域名</code>。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/7a16cb6b-b678-495f-a625-e5ef1b58d1c3.png" alt><br>然后重新试一下，发现还是不行。</p>
+<p><img src="https://imgkr.cn-bj.ufileos.com/a07d938c-c7d8-4201-82b8-f9d5247a1091.png" alt="请求源未授权"></p>
+<p>这里其实就要你去微信小程序的后台加入请求源了，因为我现在是测试号没有后台弄不了。注意的是：</p>
+<ul>
+<li>微信小程序使用的时候，WebServiceAPI 域名白名单<code>不能配置</code>，否则会报错</li>
+<li>request合法域名<code>要配置</code></li>
+</ul>
+<h2 id="05-小结"><a href="#05-小结" class="headerlink" title="05 小结"></a>05 小结</h2><p>一顿操作下来发现自己还是可以接受，但是应该说还有很多坑没有亲自踩，都是在前人的路上走，谷歌一搜mpvue的，为什么一堆都是踩坑记录？？？</p>
+<p>其实还好，mpvue对vue的语法支持还不错，因为现在自己对vue的语法比较熟悉，写起来是没有毛病的，但是主要是一些细节上可能会难以把控。</p>
+<p>特此记录一下，也是对自己的记录。发现其实学会了vue真的是很好，不仅可以开发web界面还可以把小程序也一起搞了。</p>
+<p>参考文章：</p>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000015027980" target="_blank" rel="noopener">mpvue 小程序如何自定义tabBar，不使用navigateTo跳转，模拟redirectTo跳转</a></li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/04/18/mpvue/2.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-04-18T13:55:32.220Z" itemprop="dateUpdated">2020-04-18 21:55:32</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mpvue/" rel="tag">mpvue</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/04/18/mpvue/&title=《你还在使用原生开发小程序吗》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/04/18/mpvue/&title=《你还在使用原生开发小程序吗》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/04/18/mpvue/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《你还在使用原生开发小程序吗》 — 前端小时&url=http://blog.alanwu.website/2020/04/18/mpvue/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/04/18/mpvue/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/04/20/BLE/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">如何解决安卓/IOS获取蓝牙ID不一致问题</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/04/15/vueFilter/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">关于vue过滤器的原理解析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/04/18/mpvue/&title=《你还在使用原生开发小程序吗》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/04/18/mpvue/&title=《你还在使用原生开发小程序吗》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/04/18/mpvue/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《你还在使用原生开发小程序吗》 — 前端小时&url=http://blog.alanwu.website/2020/04/18/mpvue/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/04/18/mpvue/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/04/18/mpvue/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

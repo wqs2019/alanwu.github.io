@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>深入浅出Node.js——内存管理 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="内存分配,后端,node">
+    <meta name="description" content="深入浅出Node.js——内存管理 “ 一点浩然气，千里快哉风”                                                                                                                01 前言随着Node的发展，JavaScript的运行已经不再局限于运行在浏览器中了，Node在服务端的应用使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入浅出Node.js——内存管理">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/03/nodeCollect/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="深入浅出Node.js——内存管理 “ 一点浩然气，千里快哉风”                                                                                                                01 前言随着Node的发展，JavaScript的运行已经不再局限于运行在浏览器中了，Node在服务端的应用使">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/640.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/0.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/1.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/2.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/3.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/4.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/5.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/1.gif">
+<meta property="article:published_time" content="2020-03-03T07:05:17.000Z">
+<meta property="article:modified_time" content="2020-03-05T01:15:46.262Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="内存分配">
+<meta property="article:tag" content="后端">
+<meta property="article:tag" content="node">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/03/nodeCollect/640.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">深入浅出Node.js——内存管理</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">深入浅出Node.js——内存管理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-03T07:05:17.000Z" itemprop="datePublished" class="page-time">
+  2020-03-03
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Node/">Node</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#深入浅出Node-js——内存管理"><span class="post-toc-number">1.</span> <span class="post-toc-text">深入浅出Node.js——内存管理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-V8垃圾回收与内存限制"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 V8垃圾回收与内存限制</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#01-Node与V8"><span class="post-toc-number">3.0.0.1.</span> <span class="post-toc-text">01 Node与V8</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#02-V8的内存限制"><span class="post-toc-number">3.0.0.2.</span> <span class="post-toc-text">02 V8的内存限制</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#03-V8的对象分配"><span class="post-toc-number">3.0.0.3.</span> <span class="post-toc-text">03 V8的对象分配</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#04-V8垃圾回收机制"><span class="post-toc-number">3.0.0.4.</span> <span class="post-toc-text">04 V8垃圾回收机制</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-小结"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-nodeCollect"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">深入浅出Node.js——内存管理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-03 15:05:17" datetime="2020-03-03T07:05:17.000Z"  itemprop="datePublished">2020-03-03</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Node/">Node</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="深入浅出Node-js——内存管理"><a href="#深入浅出Node-js——内存管理" class="headerlink" title="深入浅出Node.js——内存管理"></a>深入浅出Node.js——内存管理</h2><blockquote>
+<p><strong>“</strong> 一点浩然气，千里快哉风<strong>”</strong></p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/nodeCollect/640.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><p>随着Node的发展，JavaScript的运行已经不再局限于运行在浏览器中了，Node在服务端的应用使得越来越多的问题也显现出来。对于刚接触JavaScript的开发者来说，基本上很少会想到内存分配或者内存泄露的问题，为了跟上潮流，就讲解一下Node是如何合理高效地使用内存，防止内存泄漏。</p>
+<h2 id="02-V8垃圾回收与内存限制"><a href="#02-V8垃圾回收与内存限制" class="headerlink" title="02 V8垃圾回收与内存限制"></a>02 V8垃圾回收与内存限制</h2><p>JavaScript编程不用关心内存的分配和释放的问题，因为它有垃圾回收机制来管理。但是我们对于内存管理更深一步的了解可谓是很少，到底内存是怎么分配的、垃圾回收是怎么运行的？</p>
+<h5 id="01-Node与V8"><a href="#01-Node与V8" class="headerlink" title="01 Node与V8"></a><strong>01 Node与V8</strong></h5><p>我们先来了解一下这两者是什么关系。首先V8是谷歌开发出来的浏览器引擎，性能可谓是十分优异，使得JavaScript编写服务器程序成为可能。V8的由来是虚拟机专家Lars Bak开发出来的，开发者之前的工作一直都是专注于高性能的虚拟机开发。</p>
+<p>Node是一个构建在Chrome的JavaScript运行时平台，由此一来，Node的高性能就如同抱住了V8的大腿，可以随着V8的升级而享受更好的性能。</p>
+<h5 id="02-V8的内存限制"><a href="#02-V8的内存限制" class="headerlink" title="02 V8的内存限制"></a><strong>02 V8的内存限制</strong></h5><p>Node通过JavaScript使用内存的话会有限制，而且Node无法直接操作大内存对象。64位系统下约为1.4GB，而32位系统下约为0.7GB。原因是Node基于V8构建，它的内存分配和管理都是由V8来控制，虽然在浏览器下这种分配机制没有问题，但是在Node中却是有问题的。</p>
+<h5 id="03-V8的对象分配"><a href="#03-V8的对象分配" class="headerlink" title="03 V8的对象分配"></a><strong>03 V8的对象分配</strong></h5><p>在V8中，所有的JavaScript对象都是通过堆来分配的，对象占用的内存空间大小是不确定的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/nodeCollect/0.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<p>当我们在代码里写上一些变量的时候，我们就会向堆中的内存空间进行申请。我们上面说过V8是有内存分配限制的，这是因为V8的垃圾回收机制影响。我们试想一下假如有1.5GB的垃圾需要等待回收，而V8的垃圾回收机制运行一次需要每50毫秒以上，在这段时间内，程序会无法运行。</p>
+<p>假如说我非要打开这个限制也不是不行，我们可以在Node的启动时候更改一下参数即可：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node --max-old-space-size=1700   xxx.js    //单位是MB</span><br><span class="line">node --max-new-space-size=1024  xxx.js    //单位是KB</span><br></pre></td></tr></table></figure>
+
+<p>上面代码的意思就是新生代和老生代空间的更改，稍后解析什么是新生代和老生代空间。</p>
+<h5 id="04-V8垃圾回收机制"><a href="#04-V8垃圾回收机制" class="headerlink" title="04 V8垃圾回收机制"></a><strong>04 V8垃圾回收机制</strong></h5><p>在V8中，我们知道内存空间可以分为新生代和老生代。新生代空间主要是保存一些存活时间较短的对象，而老生代空间主要存储一些存活时间较长的对象。</p>
+<p>之前说过64位系统只能使用约1.4GB，32位只能使用0.7GB的空间。这空间是包含新生代和老生代空间，且老生代的空间比新生代要多。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/nodeCollect/1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>32位</th>
+<th>64位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>新生代</td>
+<td>16MB</td>
+<td>32MB</td>
+</tr>
+<tr>
+<td>老生代</td>
+<td>700MB</td>
+<td>1400MB</td>
+</tr>
+</tbody></table>
+<p>V8主要采用两种不同的算法，分别作用于新生代和老生代，因为两者的关系不一样。主要有类算法，第一是Scavenge算法，第二是Mark-Sweep &amp; Mark-Compact。新老生代的特点如下：</p>
+<p><strong>新生代：存活对象较少</strong></p>
+<p><strong>老生代：存活对象较多</strong></p>
+<p><font color="#FF7F50">①Scavenge算法</font></p>
+<ul>
+<li>把新生代空间一分为二，为From空间和To空间</li>
+<li>内存先分配到From空间，垃圾回收会检查From空间存活情况</li>
+<li>把From空间的存活对象移到To空间，释放From空间</li>
+<li>把From和To空间对换</li>
+</ul>
+<p>这就完成了垃圾回收的一次清理过程。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/nodeCollect/2.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<p><font color="#FF7F50">②Mark-Sweep算法</font></p>
+<ul>
+<li>遍历堆中的所有对象，标记存活的对象</li>
+<li>清除没有被标记的对象</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/nodeCollect/3.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<p>由于老生代空间中，存活的对象较多，使用 Scavenge 算法的话遍历的时间会相对来说比较长，而且还会浪费一半的空间来存放对象，效率比较低。总的来说，Scavenge 算法<font color="#FF7F50">复制存活</font>的对象，而 Mark-Sweep 算法<font color="#FF7F50">清除死亡</font>的对象。</p>
+<p><font color="#FF7F50">③Mark-Compact算法</font></p>
+<p>我们看到上面这种算法回收一次过后<strong><font color="#FF7F50">产生了零碎的内存空间</font></strong>，假如这时候进来一个比较大的内存对象就无法完成分配，提前触发新一轮的垃圾回收机制。所以基于这个问题，在原来算法的基础上，采用<strong><font color="#FF7F50">压缩</font></strong>的办法，在标记活对象的过程中，对象会往一边移动。然后标记完成之后直接清除边界的内存。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/nodeCollect/4.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<p><font color="#FF7F50">④Incremental Marking算法</font></p>
+<p>与前面三种不一样的是，这种算法<strong><font color="#FF7F50">采用了“步进”的方式</font></strong>进行，因为垃圾回收机制运行一次的时间也是有的，对于垃圾回收机制运行时间过长，那么页面的应用逻辑都要停下来等待，这种影响也是比较大的。</p>
+<p>对于新生代来说不用担心这个问题，因为新生代存活对象比较少，内存占用也比较小。但是对于老生代来说，<strong><font color="#FF7F50">对象比较多也比较大</font></strong>，停顿造成的影响大，所以必须要让应用逻辑受垃圾回收的影响小一点。</p>
+<p>因此采用“步进”的方式，垃圾回收机制和逻辑代码<strong><font color="#FF7F50">分段执行</font></strong>，缓解停顿时间过长而导致应用逻辑执行不了的问题。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/nodeCollect/5.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="03-小结"><a href="#03-小结" class="headerlink" title="03 小结"></a>03 小结</h2><p>Node将JavaScript的主要应用扩展到了服务器端，所以我们考虑的细节也要和浏览器的不同，更多的是对内存资源的分配问题，稍有不慎可能会写出一些内存泄漏的问题，使得垃圾回收机制不能清理释放内存，严重可能会导致服务器崩溃。</p>
+<p>所以平时我们写代码也要谨慎一点，不要写全局变量或者频繁使用闭包，这些如果没有正确释放内存的话也会导致内存泄漏。</p>
+<p>参考文章：</p>
+<ul>
+<li>深入浅出Node.js</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/nodeCollect/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-05T01:15:46.262Z" itemprop="dateUpdated">2020-03-05 09:15:46</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/node/" rel="tag">node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/" rel="tag">内存分配</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%90%8E%E7%AB%AF/" rel="tag">后端</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/03/nodeCollect/&title=《深入浅出Node.js——内存管理》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/03/nodeCollect/&title=《深入浅出Node.js——内存管理》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/03/nodeCollect/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入浅出Node.js——内存管理》 — 前端小时&url=http://blog.alanwu.website/2020/03/03/nodeCollect/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/03/nodeCollect/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/03/nodeCharator/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">详解Node.js特点</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/03/graduateThink/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">关于毕业就职的几点思考</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/03/nodeCollect/&title=《深入浅出Node.js——内存管理》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/03/nodeCollect/&title=《深入浅出Node.js——内存管理》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/03/nodeCollect/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入浅出Node.js——内存管理》 — 前端小时&url=http://blog.alanwu.website/2020/03/03/nodeCollect/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/03/nodeCollect/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/03/nodeCollect/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

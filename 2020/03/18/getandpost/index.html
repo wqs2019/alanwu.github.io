@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>关于GET/POST本质区别，面试官想听什么 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="前端,get/post,幂等性,网络,请求方法">
+    <meta name="description" content="关于GET&#x2F;POST本质区别，面试官想听什么  书犹药也，善读之可以医愚                                                                                                                01 前言 我们常说要注重基础知识，并不是要你把简单的用法记忆下来，而是要从基础上理解。所谓基础就是根基">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于GET&#x2F;POST本质区别，面试官想听什么">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/18/getandpost/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="关于GET&#x2F;POST本质区别，面试官想听什么  书犹药也，善读之可以医愚                                                                                                                01 前言 我们常说要注重基础知识，并不是要你把简单的用法记忆下来，而是要从基础上理解。所谓基础就是根基">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/18/getandpost/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/18/getandpost/1.webp">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/18/getandpost/2.webp">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/18/getandpost/2.gif">
+<meta property="article:published_time" content="2020-03-18T09:59:13.000Z">
+<meta property="article:modified_time" content="2020-03-18T10:07:22.900Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="get&#x2F;post">
+<meta property="article:tag" content="幂等性">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="请求方法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/18/getandpost/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">关于GET/POST本质区别，面试官想听什么</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">关于GET/POST本质区别，面试官想听什么</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-18T09:59:13.000Z" itemprop="datePublished" class="page-time">
+  2020-03-18
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#关于GET-POST本质区别，面试官想听什么"><span class="post-toc-number">1.</span> <span class="post-toc-text">关于GET&#x2F;POST本质区别，面试官想听什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-原理与使用"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 原理与使用</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-GET-POST"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 GET&#x2F;POST</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-小结"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-getandpost"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">关于GET/POST本质区别，面试官想听什么</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-18 17:59:13" datetime="2020-03-18T09:59:13.000Z"  itemprop="datePublished">2020-03-18</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="关于GET-POST本质区别，面试官想听什么"><a href="#关于GET-POST本质区别，面试官想听什么" class="headerlink" title="关于GET/POST本质区别，面试官想听什么"></a>关于GET/POST本质区别，面试官想听什么</h2><blockquote>
+<p> 书犹药也，善读之可以医愚</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/18/getandpost/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>我们常说要注重基础知识，并不是要你把简单的用法记忆下来，而是要从基础上理解。所谓基础就是根基，诞生的地方，才是基础。比如说一些很简单的问题，我们可能会回答不好，那是因为你没有从基础原理上解释它，而是从基础用法上解释了。</p>
+<p>我们都知道万变不离其宗，万千世界都是由最初的演变而来的，万物皆有联系。所以我们学习知识一定要从它的原理上面入手，对它的印象才会深刻理解。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/18/getandpost/1.webp" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="02-原理与使用"><a href="#02-原理与使用" class="headerlink" title="02 原理与使用"></a>02 原理与使用</h2><hr>
+<p>原理和使用其实是两个截然不同的地方，所谓学习就是学习原理，使用次之。由于现在前端的业务可能会变得更加复杂，我们需要利用一些现成的框架或者组件库来开发我们的产品，难免就只关注了使用而忽略了原理。现成的轮子并不会满足日常开发的所有需要，我们有可能在原基础上再进行封装，要是不懂原理我们就很难进行二次开发。</p>
+<p><strong><font color="red">原理</font></strong>：就是我们利用原生的技术来实现的组件，框架。实现和封装了一些便于操作的事件与方法，让我们的业务更加轻松。</p>
+<p><strong><font color="red">使用</font></strong>：对开源的框架或者组件进行项目的嵌入，能够快速高效地开发出符合产品需求的程序，并且耦合程度低，使用方便。直接使用已经封装好的事件与方法即可。</p>
+<h2 id="03-GET-POST"><a href="#03-GET-POST" class="headerlink" title="03 GET/POST"></a>03 GET/POST</h2><hr>
+<p>这是一道很简单的面试题，也可以说在面试中非常高频。但是很多时候同学们回答的所谓正确答案往往是比较表面的。网上查找一下，我们发现别人总结的主要有以下几种：</p>
+<ul>
+<li>GET请求在URL中传送的参数是有长度限制的，而POST没有。</li>
+<li>对参数的数据类型，GET只接受ASCII字符，而POST没有限制。</li>
+<li>GET比POST更不安全，因为参数直接暴露在URL上，不能用来传递敏感信息。</li>
+<li>GET参数通过URL传递，POST放在Request body中。</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/18/getandpost/2.webp" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<p>我们知道，GET\POST是http协议中的两种方法，方法与数据其实是没有必然联系的，只是用法的约定而已。也就是说，你也可以使用GET方法，把数据放在body里面也是可以的。</p>
+<blockquote>
+<p>Both HTTP GET and HTTP POST can be used to execute search with body. Since not all clients support GET with body, POST is allowed as well.</p>
+<p><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-body.html</a></p>
+</blockquote>
+<p>这是Elasticsearch的说明，当使用时GET时请求时是可以把数据放在body里面的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GET /twitter/_search</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"query"</span> : &#123;</span><br><span class="line">        <span class="string">"term"</span> : &#123; <span class="string">"user"</span> : <span class="string">"kimchy"</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么真正的区别是什么呢？</p>
+<p>GET/POST的最大区别是GET请求有幂等性，但是POST请求没有。什么是幂等性呢？我们知道使用GET方法请求同样的接口，返回来的数据是不会改变的，但是对于POST请求，实现一些增删改查的操作的时候可能会发生重复提交的问题。</p>
+<p>也就是说我们如果使用GET请求做增删改查的时候，遇到网络不好可能会多次操作，造成数据库的混乱，这是一个很严重的问题，但是使用POST就不会有这种情况。</p>
+<p>当我们在面试中的时候我们要从原理和使用上面两个方面来进行回答。先回答使用上有哪些区别，说几种就好，但是重要的是把本质的说出来，那样就加分不少。把简单的问题回答到有深度的就不简单。</p>
+<p>关于网上《99%的人都理解错了 HTTP 中 GET 与 POST 的区别》这篇文章说的“GET产生一个TCP数据包；POST产生两个TCP数据包”，其实也不是完全正确，因为数据包产生多少个完全是由浏览器等第三方工具的具体做法，与协议方法没有任何联系。</p>
+<p>当用户是以POST方法来进行数据的发送的时候，可能浏览器等服务器返回100状态码之后才会进行数据的发送，相当于第一个数据包是询问服务器是否接受数据，如果不接受就不会进行发送。</p>
+<blockquote>
+<p>The purpose of the 100 (Continue) status (see section 10.1.1) is to allow a client that is sending a request message with a request body to determine if the origin server is willing to accept the request (based on the request headers) before the client sends the request body.</p>
+<p><a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html#sec8.2.3" target="_blank" rel="noopener">https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html#sec8.2.3</a></p>
+</blockquote>
+<h2 id="04-小结"><a href="#04-小结" class="headerlink" title="04 小结"></a>04 小结</h2><hr>
+<p>无论是做什么，个人的感觉就是一定要重视基础和原理，这是最简单但也是最重要的一部分。每一个知识点背后都会藏着巨大的知识，我们就做那个挖掘知识的人。作为应届生和校招生，面试过很多公司，要求并不高，但是你不一定答得出来。这就是把简单的问题回答得不简单。</p>
+<p><img src="/2020/03/18/getandpost/2.gif" alt></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-18T10:07:22.900Z" itemprop="dateUpdated">2020-03-18 18:07:22</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/get-post/" rel="tag">get/post</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B9%82%E7%AD%89%E6%80%A7/" rel="tag">幂等性</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag">网络</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AF%B7%E6%B1%82%E6%96%B9%E6%B3%95/" rel="tag">请求方法</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/18/getandpost/&title=《关于GET/POST本质区别，面试官想听什么》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/18/getandpost/&title=《关于GET/POST本质区别，面试官想听什么》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/18/getandpost/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于GET/POST本质区别，面试官想听什么》 — 前端小时&url=http://blog.alanwu.website/2020/03/18/getandpost/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/18/getandpost/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/18/jsArrayAPI/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">JavaScript中关于数组的问题</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/18/flexLayout/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">一次读懂flex布局</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/18/getandpost/&title=《关于GET/POST本质区别，面试官想听什么》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/18/getandpost/&title=《关于GET/POST本质区别，面试官想听什么》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/18/getandpost/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《关于GET/POST本质区别，面试官想听什么》 — 前端小时&url=http://blog.alanwu.website/2020/03/18/getandpost/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/18/getandpost/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/18/getandpost/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>浏览器按下回车发生了什么 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="DNS,浏览器,线程,三次握手,渲染">
+    <meta name="description" content="浏览器按下回车发生了什么 “立身以立学为先，立学以读书为本”                                                                                                                01 前言 这一篇文章是其实就是讲述浏览器的渲染原理，普通用户虽然操作浏览器只会关注页面是否能够显示出来，但是作为前">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器按下回车发生了什么">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/11/enterProcess/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="浏览器按下回车发生了什么 “立身以立学为先，立学以读书为本”                                                                                                                01 前言 这一篇文章是其实就是讲述浏览器的渲染原理，普通用户虽然操作浏览器只会关注页面是否能够显示出来，但是作为前">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/11/enterProcess/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/11/enterProcess/1.webp">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/11/enterProcess/1.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/11/enterProcess/2.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/11/enterProcess/3.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/11/enterProcess/4.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/11/enterProcess/2.gif">
+<meta property="article:published_time" content="2020-03-11T08:32:21.000Z">
+<meta property="article:modified_time" content="2020-03-11T08:45:53.242Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="DNS">
+<meta property="article:tag" content="浏览器">
+<meta property="article:tag" content="线程">
+<meta property="article:tag" content="三次握手">
+<meta property="article:tag" content="渲染">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/11/enterProcess/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">浏览器按下回车发生了什么</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">浏览器按下回车发生了什么</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-11T08:32:21.000Z" itemprop="datePublished" class="page-time">
+  2020-03-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#浏览器按下回车发生了什么"><span class="post-toc-number">1.</span> <span class="post-toc-text">浏览器按下回车发生了什么</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-响应过程"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 响应过程</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#IP地址查询"><span class="post-toc-number">3.0.0.1.</span> <span class="post-toc-text">IP地址查询</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#建立TCP连接"><span class="post-toc-number">3.0.0.2.</span> <span class="post-toc-text">建立TCP连接</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#服务器处理"><span class="post-toc-number">3.0.0.3.</span> <span class="post-toc-text">服务器处理</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#响应返回"><span class="post-toc-number">3.0.0.4.</span> <span class="post-toc-text">响应返回</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#页面渲染"><span class="post-toc-number">3.0.0.5.</span> <span class="post-toc-text">页面渲染</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-重绘与回流"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 重绘与回流</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-阻塞渲染"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 阻塞渲染</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#05-小结"><span class="post-toc-number">6.</span> <span class="post-toc-text">05 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-enterProcess"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">浏览器按下回车发生了什么</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-11 16:32:21" datetime="2020-03-11T08:32:21.000Z"  itemprop="datePublished">2020-03-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E6%B5%8F%E8%A7%88%E5%99%A8/">浏览器</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="浏览器按下回车发生了什么"><a href="#浏览器按下回车发生了什么" class="headerlink" title="浏览器按下回车发生了什么"></a>浏览器按下回车发生了什么</h2><blockquote>
+<p>“立身以立学为先，立学以读书为本”</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/11/enterProcess/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>这一篇文章是其实就是讲述浏览器的渲染原理，普通用户虽然操作浏览器只会关注页面是否能够显示出来，但是作为前端程序员是要去关注要是显示异常该如何排查问题。</p>
+<p>其实当你深入研究的时候，你会发现中间过程比我们想象的还要复杂。其中包括IP地址的解析、DNS服务器查询，服务器响应等一系列过程，下面我就解析一下浏览器到底是怎么工作的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/11/enterProcess/1.webp" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="02-响应过程"><a href="#02-响应过程" class="headerlink" title="02 响应过程"></a>02 响应过程</h2><hr>
+<p>从我自己的总结来看，它可以分为以下几个流程：</p>
+<ul>
+<li>IP地址查询</li>
+<li>建立TCP连接</li>
+<li>服务器处理</li>
+<li>响应返回</li>
+<li>页面渲染</li>
+</ul>
+<h5 id="IP地址查询"><a href="#IP地址查询" class="headerlink" title="IP地址查询"></a><strong>IP地址查询</strong></h5><p>假设我们在页面上输入 www . baidu . com ，那么我们是如何得到百度的IP地址呢？我先来插个小插曲，其实百度服务器的IP地址是有多个的，因为对于搜索引擎来说每天都有巨大的访问量，必须有负载均衡的处理，否则就会崩溃挂机。</p>
+<p>IP地址的查询其实也通过几个步骤来得到的</p>
+<ul>
+<li>首先浏览器查询自己的DNS缓存</li>
+<li>如没有就会去操作系统中进行查找，也会查找一下本机的host是否有缓存</li>
+<li>如没有就会去路由器中查找</li>
+<li>再没有就去本地域名服务器中查找，一般是本地的服务运营商，如中国电信</li>
+<li>操作系统会得到IP地址，并且缓存起来</li>
+<li>浏览器得到操作系统返回的IP地址，同样也缓存</li>
+</ul>
+<p>到了这里浏览器就会得到www . baidu . com 的IP地址了，接下来就会进行地址的访问和连接。</p>
+<h5 id="建立TCP连接"><a href="#建立TCP连接" class="headerlink" title="建立TCP连接"></a><strong>建立TCP连接</strong></h5><p>建立TCP连接最重要的就是要进行三次握手</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/11/enterProcess/1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>当进行数据发送之前，会把数据经过网络协议的层层封装，经过应用层、传输层、网络层、链路层。当服务器接收数据时会对数据进行拆封，最后才会得到HTTP数据。我们知道TCP/IP分层模型一般会分成以下几层（图），每一层都有不同的协议对应着，保证了数据的传输。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/11/enterProcess/2.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>那么每一层对应哪些协议呢？</p>
+<p><strong>应用层</strong>：决定了向用户提供应用服务时通讯的活动。比如FTP（文件传输协议），DNS（域名系统），HTTP（超文本传输协议），Telnet（网络远程访问协议）等。</p>
+<p><strong>传输层</strong>：传输层对上层应用层，提供处于网络连接中的两台计算机之间的数据传输。提供TCP（传输控制协议）和 UDP（用户数据报协议）两种协议，主要是对数据格式化、数据确认和数据丢失重传。</p>
+<p><strong>网络层</strong>：用来处理网络上流动的数据包。数据包是网络传输的最小数据单位。规定了通过怎么样的途径来到达对方的计算机，并传输数据给它。网络层中通过IP协议把数据包传输给对方。IP地址指明结点被分配到的地址，而MAC地址指网卡所属地址（一般不会改）。在IP层中，会通过ARP（地址解析协议）得到相应的MAC地址。</p>
+<p><strong>链路层</strong>：处理连接网络的硬件部分，包括控制操作系统、硬件的设备驱动、网卡以及光纤的物理可见部分。涉及硬件部分就依赖于MAC地址。</p>
+<h5 id="服务器处理"><a href="#服务器处理" class="headerlink" title="服务器处理"></a><strong>服务器处理</strong></h5><p>当数据到达服务器就会进行解析处理。处理结果会返回一个状态码，常见的状态码有如下几种：</p>
+<ul>
+<li>200 OK ：客户端请求成功</li>
+<li>400 Bad Request ：客户端请求有语法错误，不能被服务器所理解</li>
+<li>401 Unauthorized ：请求未经授权，这个状态代码必须和WWW-Authenticate报头域一起使用</li>
+<li>403 Forbidden ：服务器收到请求，但是拒绝提供服务</li>
+<li>404 Not Found ：请求资源不存在</li>
+<li>500 Internal Server Error ：服务器发生不可预期的错误</li>
+<li>503 Server Unavailable ：服务器当前不能处理客户端的请求，一段时间后可能恢复正常</li>
+</ul>
+<h5 id="响应返回"><a href="#响应返回" class="headerlink" title="响应返回"></a><strong>响应返回</strong></h5><p>当浏览器接收到服务器返回的数据，会对数据进行预处理，根据状态码来进行不同的处理。比如403状态码，就会允许浏览器使用缓存而无需重新请求。如果是200状态码，可能就是一次新的请求，浏览器可能会对资源进行解压缩、缓存资源等操作。最后一步才是解析资源，渲染页面。</p>
+<h5 id="页面渲染"><a href="#页面渲染" class="headerlink" title="页面渲染"></a><strong>页面渲染</strong></h5><p>浏览器接收到数据，会进行以下步骤的操作：</p>
+<ul>
+<li>解析HTML文件，转换成DOM树</li>
+<li>解析CSS文件，转换成CSSOM树</li>
+<li>生产渲染树</li>
+<li>将信息发送给GPU，合成渲染</li>
+</ul>
+<p>我们知道，计算机的传输都是以0101的数据进行传输，所以说我们接收到的数据也是这种格式，我们必须要进行解析。首先将字节数据转换成字符串，也就是我们的代码。然后对字符串进行词法分析转换成token（标记），这一过程就是标记化。下一步就把标记转换成Node，最后根据不同的联系构建出一棵DOM树。</p>
+<p>解析CSS的原理一样，两棵树的解析是并行的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/11/enterProcess/3.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>最后就是合并两棵树的操作，注意渲染树会忽略那些不需要显示的节点，比如节点的样式设置为：display:none;</p>
+<h2 id="03-重绘与回流"><a href="#03-重绘与回流" class="headerlink" title="03 重绘与回流"></a>03 重绘与回流</h2><hr>
+<p>重绘与回流影响的是两棵树的解析过程，那么什么是重绘和回流呢？</p>
+<ul>
+<li>重绘</li>
+</ul>
+<p>当我们修改了DOM的一些样式，比如修改文字颜色或者背景色，这些浏览器是不需要重新计算几何属性的，直接绘制新的样式。</p>
+<ul>
+<li>回流</li>
+</ul>
+<p>当我们修改DOM的几何属性，一般有修改元素的宽高等，浏览器就会重新计算位置，然后再进行重新绘制。</p>
+<p>那么我们该如何避免呢？</p>
+<ul>
+<li>减少使用绝对定位，使用transform代替</li>
+<li>减少使用display，使用visibility代替</li>
+<li>css样式避免节点嵌套过多，匹配规则是从右往左</li>
+</ul>
+<h2 id="04-阻塞渲染"><a href="#04-阻塞渲染" class="headerlink" title="04 阻塞渲染"></a>04 阻塞渲染</h2><hr>
+<p>因为JS运行是单线程的，所以当我们解析HTML代码和JS代码就会有冲突。我们的期望是先把页面渲染出来，然后再执行JS代码。所以我们就要注意以下几个事情：</p>
+<ol>
+<li>把&lt; script &gt;标签放在底部</li>
+<li>把样式文件放在顶部，防止页面“裸奔”</li>
+</ol>
+<p>DOM解析和CSS解析是两个并行的进程，CSS加载不会阻塞DOM的解析</p>
+<p>由于渲染树是依赖于DOM树和CSSOM树的，必须等待到CSSOM树构建完成，也就是CSS资源加载完成(或者CSS资源加载失败)后，才能开始渲染。因此，CSS加载是会阻塞DOM的渲染的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/11/enterProcess/4.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="05-小结"><a href="#05-小结" class="headerlink" title="05 小结"></a>05 小结</h2><hr>
+<p>对于浏览器渲染原理这一部分，面试也是经常考到的，前端必须对这一块非常熟悉。这一块很有深度，对于项目的优化都可以参照以上的过程，只有当每一个过程都达到最优的状态，性能才是最佳。</p>
+<p>其实还有很多知识点没有讲解出来，读者可以根据需要去自行查找，总体方向就是以上的过程。</p>
+<p><img src="/2020/03/11/enterProcess/2.gif" alt></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-11T08:45:53.242Z" itemprop="dateUpdated">2020-03-11 16:45:53</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DNS/" rel="tag">DNS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B/" rel="tag">三次握手</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B5%8F%E8%A7%88%E5%99%A8/" rel="tag">浏览器</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B8%B2%E6%9F%93/" rel="tag">渲染</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%BF%E7%A8%8B/" rel="tag">线程</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/11/enterProcess/&title=《浏览器按下回车发生了什么》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/11/enterProcess/&title=《浏览器按下回车发生了什么》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/11/enterProcess/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《浏览器按下回车发生了什么》 — 前端小时&url=http://blog.alanwu.website/2020/03/11/enterProcess/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/11/enterProcess/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/11/colorDesign/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">前端配色设计技巧</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/11/interviewTip/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">开始面试，我该准备什么</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/11/enterProcess/&title=《浏览器按下回车发生了什么》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/11/enterProcess/&title=《浏览器按下回车发生了什么》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/11/enterProcess/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《浏览器按下回车发生了什么》 — 前端小时&url=http://blog.alanwu.website/2020/03/11/enterProcess/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/11/enterProcess/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/11/enterProcess/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

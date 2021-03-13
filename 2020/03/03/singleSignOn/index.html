@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>如何实现单点登录(single sign on) | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="计算机网络,session,Token,SSO">
+    <meta name="description" content="如何实现单点登录(single sign on) “ 人生天地间，忽如远行客 “                                                                                                                01 前言 我们访问淘宝的时候，点击查看天猫商品的时候发现天猫的账户也同样是登陆的状态，这就是单">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何实现单点登录(single sign on)">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/03/singleSignOn/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="如何实现单点登录(single sign on) “ 人生天地间，忽如远行客 “                                                                                                                01 前言 我们访问淘宝的时候，点击查看天猫商品的时候发现天猫的账户也同样是登陆的状态，这就是单">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/singleSignOn/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/singleSignOn/1.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/singleSignOn/2.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/singleSignOn/3.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/singleSignOn/1.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/singleSignOn/2.gif">
+<meta property="article:published_time" content="2020-03-03T12:48:26.000Z">
+<meta property="article:modified_time" content="2020-03-03T12:59:17.482Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="session">
+<meta property="article:tag" content="Token">
+<meta property="article:tag" content="SSO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/03/singleSignOn/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">如何实现单点登录(single sign on)</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">如何实现单点登录(single sign on)</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-03T12:48:26.000Z" itemprop="datePublished" class="page-time">
+  2020-03-03
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#如何实现单点登录-single-sign-on"><span class="post-toc-number">1.</span> <span class="post-toc-text">如何实现单点登录(single sign on)</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-单点登录"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 单点登录</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-Redis缓存"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 Redis缓存</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-小结"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-singleSignOn"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">如何实现单点登录(single sign on)</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-03 20:48:26" datetime="2020-03-03T12:48:26.000Z"  itemprop="datePublished">2020-03-03</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="如何实现单点登录-single-sign-on"><a href="#如何实现单点登录-single-sign-on" class="headerlink" title="如何实现单点登录(single sign on)"></a>如何实现单点登录(single sign on)</h2><blockquote>
+<p>“ 人生天地间，忽如远行客 “</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/singleSignOn/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>我们访问淘宝的时候，点击查看天猫商品的时候发现天猫的账户也同样是登陆的状态，这就是单点登录系统。使用单点登录是因为我们可以更好地抽离子系统，做到模块的拆分，降低系统的耦合程度。</p>
+<p>如果我们不是单点登陆，那状态就不能共享了。比如淘宝的购物车是不能查看天猫的商品的，这就不合理了。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/singleSignOn/1.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="02-单点登录"><a href="#02-单点登录" class="headerlink" title="02 单点登录"></a>02 单点登录</h2><hr>
+<p>那么单点登录是如何实现的呢？我们可以举个简单的例子，我们去某一个地方（广州、深圳），那就必须购买那个城市的普通车票。假如我们去车站买了一张万能的车票，然后你可以选择去广州、深圳等各种地方。</p>
+<p>之前的系统都是耦合程度比较高的，一次登录只能访问一个系统，也就是你必须有那个系统的通行证（普通车票）。但是现在你有万能车票，这个车票是车站发给你的，此时车站就是中心处理点（认证中心），广州/深圳的站台验证你的车票（Token）后就可以放行。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/singleSignOn/2.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>这张图我们可以理解为客户去车站买票，认证中心颁发的Token就是万能车票。我们利用这个Token就可以随意访问子系统的信息，前提是你的Token有效。</p>
+<p>当你买了万能车票之后你就可以访问各种子系统，那么过程就可以理解为下面的图。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/singleSignOn/3.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<p><font color="#FF7F50">用户首次登录过程：</font></p>
+<ul>
+<li>用户第一次访问，未登录则重定向认证中心</li>
+<li>登录成功，颁发Token给用户</li>
+<li>重定向系统A，带上Token访问系统A</li>
+<li>系统A拿到Token与认证中心比较，正确则创建session局部会话</li>
+</ul>
+<p><font color="#FF7F50">用户非首次登录过程：</font></p>
+<ul>
+<li>用户带上Token访问系统B</li>
+<li>系统B拿到Token与认证中心比较，正确则创建session局部会话</li>
+</ul>
+<p>我们请求系统A/B的时候，会带上Token，一般来说我们可以把Token存储到客户端的浏览器中，以<strong><font color="#FF7F50">cookie的形式保存</font></strong>。那么这里就有一个问题，cookie是不可以跨域的，可能系统A个系统B不是同一个域名怎么办呢？</p>
+<p>针对这个问题，我们可以把cookie写到浏览器的时候设置Cookie的domain。domain是可以设置<strong><font color="#FF7F50">二级域名跨域</font></strong>的，比如abc.server.com与wer.server.com的。这样就可以成功跨域，认证中心也可以正确取出Token。</p>
+<p>或者我们也可以把Token保存在<strong><font color="#FF7F50">SessionStorage</font></strong>中，不依赖cookie就可以避开这个问题。</p>
+<h2 id="03-Redis缓存"><a href="#03-Redis缓存" class="headerlink" title="03 Redis缓存"></a>03 Redis缓存</h2><hr>
+<p>其实Redis也是一个数据库，是一个开源的，基于内存的数据结构存储，可以用于数据缓存、消息中间件。既然是这样，那其实我们也可以把用户的登录信息全部缓存到Redis中，以后每一次访问都要去Redis看一下有没有登录信息即可。</p>
+<p>使用Redis的优点就是可以实现<strong><font color="#FF7F50">分布式缓存</font></strong>，如果有多台机器的话，每一台机器都会共享一份缓存，并且缓存还具有<strong><font color="#FF7F50">一致性</font></strong>。一般来说，Redis是专业用来缓存数据的，可以承受10G+的缓存数据，也可将缓存数据放到硬盘中，Redis重启后也可以恢复。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/singleSignOn/1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>我们可以看到，SSO本身也是一个系统，只是专门用来管理用户的登录信息而已，那么它的信息是可以与数据库进行对接，其中Redis就可以做缓存信息的功能，不用每次请求都定向到数据库。</p>
+<h2 id="04-小结"><a href="#04-小结" class="headerlink" title="04 小结"></a>04 小结</h2><hr>
+<p>到现在我们应该可以理解SSO的原理是怎么样的，一般像淘宝，网易等公司的系统都会这样设置，能够避免访问系统的时候重复登陆，也优化了架构的方案，使得架构更加清晰而不臃肿。</p>
+<p><font color="#32CD32">参考文章</font></p>
+<ul>
+<li>什么是单点登录</li>
+<li>cookie的domain属性</li>
+<li>从零单排学Redis</li>
+<li>单点登录（SSO）的设计与实现</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/singleSignOn/2.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-03T12:59:17.482Z" itemprop="dateUpdated">2020-03-03 20:59:17</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SSO/" rel="tag">SSO</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Token/" rel="tag">Token</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/session/" rel="tag">session</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/03/singleSignOn/&title=《如何实现单点登录(single sign on)》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/03/singleSignOn/&title=《如何实现单点登录(single sign on)》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/03/singleSignOn/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何实现单点登录(single sign on)》 — 前端小时&url=http://blog.alanwu.website/2020/03/03/singleSignOn/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/03/singleSignOn/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/04/webpack/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">webpack面试常考点——深入浅出webpack</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/03/http2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">HTTP 2.0有什么新特性</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/03/singleSignOn/&title=《如何实现单点登录(single sign on)》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/03/singleSignOn/&title=《如何实现单点登录(single sign on)》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/03/singleSignOn/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何实现单点登录(single sign on)》 — 前端小时&url=http://blog.alanwu.website/2020/03/03/singleSignOn/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/03/singleSignOn/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/03/singleSignOn/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

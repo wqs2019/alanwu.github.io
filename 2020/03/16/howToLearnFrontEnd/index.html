@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>如何从零开始学习前端技术 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="思考,前端,学习方法,路线,坚持,随想录">
+    <meta name="description" content="如何从零开始学习前端技术 没有一种技术是学不会的，10小时可以入门一门新技术，10000小时可以成为一个领域的专家。                                                                                                                01 前言 互联网在当今的世界显得异常火爆，每一个人都尝试挤">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何从零开始学习前端技术">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="如何从零开始学习前端技术 没有一种技术是学不会的，10小时可以入门一门新技术，10000小时可以成为一个领域的专家。                                                                                                                01 前言 互联网在当今的世界显得异常火爆，每一个人都尝试挤">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/1.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/5.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/6.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/4.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/2.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/3.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/7.jpg">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/2.gif">
+<meta property="article:published_time" content="2020-03-16T09:55:33.000Z">
+<meta property="article:modified_time" content="2020-03-16T16:02:59.264Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="思考">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="学习方法">
+<meta property="article:tag" content="路线">
+<meta property="article:tag" content="坚持">
+<meta property="article:tag" content="随想录">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">如何从零开始学习前端技术</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">如何从零开始学习前端技术</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-16T09:55:33.000Z" itemprop="datePublished" class="page-time">
+  2020-03-16
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E9%9A%8F%E6%83%B3%E5%BD%95/">随想录</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#如何从零开始学习前端技术"><span class="post-toc-number">1.</span> <span class="post-toc-text">如何从零开始学习前端技术</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-爬坡阶段"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 爬坡阶段</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#青铜阶段"><span class="post-toc-number">3.0.0.1.</span> <span class="post-toc-text">青铜阶段</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#白银阶段"><span class="post-toc-number">3.0.0.2.</span> <span class="post-toc-text">白银阶段</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#黄金阶段"><span class="post-toc-number">3.0.0.3.</span> <span class="post-toc-text">黄金阶段</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#钻石阶段"><span class="post-toc-number">3.0.0.4.</span> <span class="post-toc-text">钻石阶段</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#王者阶段"><span class="post-toc-number">3.0.0.5.</span> <span class="post-toc-text">王者阶段</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-面试基础"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 面试基础</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-小结"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-howToLearnFrontEnd"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">如何从零开始学习前端技术</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-16 17:55:33" datetime="2020-03-16T09:55:33.000Z"  itemprop="datePublished">2020-03-16</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E9%9A%8F%E6%83%B3%E5%BD%95/">随想录</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="如何从零开始学习前端技术"><a href="#如何从零开始学习前端技术" class="headerlink" title="如何从零开始学习前端技术"></a>如何从零开始学习前端技术</h2><blockquote>
+<p>没有一种技术是学不会的，10小时可以入门一门新技术，10000小时可以成为一个领域的专家。</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/16/howToLearnFrontEnd/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>互联网在当今的世界显得异常火爆，每一个人都尝试挤破头脑去学习、去进入这一行业。作为一个前端从零开始学习的过来人，下面我的会详细说一下当初是怎么过来的，希望大家都会从我的这一段经历找到自己的出发点。如果大家对前端是没有一点概念的话，其实这只是一个方向的技术。比如我们看到华丽的网站，打开的一个微信小程序，还有打开的APP，其实都是前端方向的内容。</p>
+<p>这时候大家有可能会问了，这么多的技术我们都要去学会吗？其实不然，现在基本上你能够掌握其中的一种技术，你就可以找到一份很好的工作，把每一项的技术都精通的人其实是很少的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/16/howToLearnFrontEnd/1.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="02-爬坡阶段"><a href="#02-爬坡阶段" class="headerlink" title="02 爬坡阶段"></a>02 爬坡阶段</h2><hr>
+<h5 id="青铜阶段"><a href="#青铜阶段" class="headerlink" title="青铜阶段"></a><strong>青铜阶段</strong></h5><p>我们从最基本的前端基础知识开始讲起，这里也是我们最初的出发点。在这个过程当中呢，你会觉得前端的世界是那么的小，做什么事情都是的得心应手的，一度沉浸在自己的世界里不能自拔。你自己想走出去，但是又害怕外面的世界，所以你可能会在这里徘徊一段时间，等你觉得自己可以有信心打怪升级的时候自然会攀越过去。</p>
+<p>我自己也是从html和css这两个基本的知识出发，经过编写一些静态的网页能在本地打开运行，能够看到自己的成果。其实这个过程我甚至不知道网页需要部署在服务器上面，也不知道那些所谓的动画和交互是什么出现的。总之你不会太过关注自己的不懂得知识，反而会默默欣赏自己的作品。</p>
+<p>其实在这个阶段你也可以找一些网页模板看一下，主要就是学习一些结构方面的知识。也就是说你要知道在哪里放div，在哪里写p或者h1标签，就可以了。结构搭建好了之后你就可以关注一下css这些属性有什么用，到底这一块的红色是哪里来的，这里的蓝色背景哪里设置的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/16/howToLearnFrontEnd/5.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>这里可以推荐大家去看：</p>
+<ul>
+<li>菜鸟教程</li>
+<li>w3c school</li>
+<li>拿别人的页面研究（静态）</li>
+</ul>
+<h5 id="白银阶段"><a href="#白银阶段" class="headerlink" title="白银阶段"></a><strong>白银阶段</strong></h5><p>在前一个阶段里面，你已经学会了如何去制作一个简单/复杂的静态网页，但是都是一些写死的内容。所以在这个阶段里面你就大可以学习动画的制作，有了JavaScript这门脚本语言，简直就是如虎添翼。我在个阶段的时候，很关心页面是怎么动起来的，只是用到一个定时器的函数，仅此而已。</p>
+<p>假如现在，大家一定不会去写这些函数来使页面动起来，有很多现成的组件或者框架等。可能前两年大家不是很关心这些东西，但是现在各种框架层出不穷，我们已经不会去关心底层的原理实现了，只关心开箱即用。</p>
+<p>这里推荐大家去看：</p>
+<ul>
+<li>JavaScript入门经典（书）</li>
+<li>JavaScript高级程序设计（第三版）（这本书是有难度的，适合各个阶段的人学习）</li>
+</ul>
+<h5 id="黄金阶段"><a href="#黄金阶段" class="headerlink" title="黄金阶段"></a><strong>黄金阶段</strong></h5><p>当你掌握了前端的”三件套“，我们就应该可以做点东西出来了，是时候检验自己的学习成果的时候了。但是你先别急，在这个阶段里面有很多可以让你头疼的东西，根本的原因是——你前面两个阶段没有学好。</p>
+<p>没错，在这个阶段里面，你主要的任务就是去选择一门比较热门的框架来学习，然后了解这一门框架的周边生态，上手的难度如何，还有是否迎合当前的公司环境。其实现在看来你大可放心去学习vue/react/angular这三大框架，因为很多大公司都基本会使用这些技术。而且基本上都要你掌握其中一门技术。</p>
+<p>这里大家可以选择上手难度比较小的vue框架，这个框架一直在维护，现在已经准备要发布3.0版本了，大家又要准备好好去学习了。除此，vue的周边生态非常好，全球都有人使用，官网的文档丰富全面，你可以在上面找到你想要的知识。也正是由于这个原因，基于vue的框架也出了很多，都是支持vue的语法的。比较好的有uniapp，可以变成多种终端，它的目标就是打造多端统一的框架。</p>
+<p>你可以使用vue的模板轻松配置出好看的、可以使用的后台管理系统模板以及一些webapp。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/16/howToLearnFrontEnd/6.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>这里推荐大家去看：</p>
+<ul>
+<li>框架的官网</li>
+<li>vue.js实战（书）</li>
+<li>深入浅出vue.js（书）</li>
+<li>github关于vue的项目</li>
+</ul>
+<h5 id="钻石阶段"><a href="#钻石阶段" class="headerlink" title="钻石阶段"></a><strong>钻石阶段</strong></h5><p>当年很庆幸自己已经熬过去了，你以为人生终于走上了巅峰。但是你错了，你的前端人生才刚刚开始，前面所做的各种事情只不过是为了现在能够正式开始而已。这也是为什么很多小伙伴都会觉得前端的水很深，以至于后面越学越怀疑人生，不懂为什么要这样对自己，直接告诉我前端水深就好了不行吗？但是我想说的是，既然路是自己选的，那么就开心地走下去，你会感激的。</p>
+<p>在经过前面的阶段后，你已经可以找到一份可以实习的工作了。你可以自己去锻炼一下你之前所学的内容，看是否与自己所学的有出入。但是如果你是去到一个小公司实习，里面的东西也可能不是你自己学的，因为每一个公司都有自己内部的框架，你有可能需要重新学习。所以去之前一定要了解一下公司用的技术栈是什么？</p>
+<p>这个阶段一般你要学习前端打包工具，比如webpack的使用，以及前端工程化的内容，代码合并、代码分割、单元测试、性能优化、自动构建、部署上线等内容。这里面也是有很大的学问，思想不是一时能够学会的，必须经过很长一段时间的积累才可以有所领悟。而且这些东西理论学习的作用是不大的，必须亲自体验才会领悟精髓。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/16/howToLearnFrontEnd/4.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>这里推荐大家去看：</p>
+<ul>
+<li>深入浅出webpack（书）</li>
+<li>前段工程化（书）</li>
+</ul>
+<hr>
+<p>这里小结一下：</p>
+<p>能够到达这个阶段是很不容易的，起码要半年左右一直在学习实践，这也是为什么很多的培训机构都会有4~6个月的培训期，但是我可以告诉你们的是培训教会你的只是业务的知识，教你怎么去开发页面而已。如果你想自己学习一定要学习它的理论原理知识，这才是有用的，也是你通过面试的关键部分。总的来说，就好像这下面的图一样，你以为终于出头了，但是仅仅是开始……</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/16/howToLearnFrontEnd/2.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<hr>
+<h5 id="王者阶段"><a href="#王者阶段" class="headerlink" title="王者阶段"></a><strong>王者阶段</strong></h5><p>一般来说，当你到达这个阶段的时候，人生就可以熬出头了，如无意外你将可以独立带领一个小团队开发产品，负责某一个生产线的项目，也就是leader级别的人物了，而且很多面试都是你来负责的。</p>
+<p>但是这个阶段只有很少一部分人可以到达，有人可能到了上一个阶段就放弃了转而继承家产也不一定。由于没有到达这个阶段，我也不知道该怎么去说，也不知道推荐什么。当我有能力的时候，在来与大家详谈吧，话题保留。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/16/howToLearnFrontEnd/3.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="03-面试基础"><a href="#03-面试基础" class="headerlink" title="03 面试基础"></a>03 面试基础</h2><hr>
+<p>这一部分也是一直贯穿在整个学习的过程当中的，因为你最终还是要进入一家公司工作。但是你要明白只有通过面试才能进去，否则即使你有很强的技术，但是你没有通过面试也是白忙活而已。</p>
+<p>这里建议大家一定要多关注一些计算机的基础知识，这些一般在第一轮面试中问的比较多，也是比较基础的。但是我发现很多同学都对这一部分不关注，认为没有必要，将来也不会用到这些很偏的知识。简单一点的就会问你线程与进程的区别，这些就是计算机基础，简单吗？简单。难吗？确实是挺难的。</p>
+<p>每一个公司考核的偏重点是不一样的，比如字节跳动比较偏算法方面的知识，每一轮的面试都会叫你手写算法，这样的面试对于不会算法的同学就是找虐的过程。但是比如腾讯公司，他有可能会偏重一部分的知识，比如计算机网络。</p>
+<p>无论怎么样，想要通过面试最好的方法就是多看师兄师姐的面经，然后总结一套题库，这样面试自然就不会慌了。但是你要理解里面的原理，还有能够举一反三，靠背答案是不能通过面试的。</p>
+<p>这里推荐大家：</p>
+<ul>
+<li>剑指offer（书）（）面向算法/刷题</li>
+<li>图解http（书）</li>
+<li>图解tcp/ip（书）</li>
+<li>牛客网（看面经）</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/16/howToLearnFrontEnd/7.jpg" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="04-小结"><a href="#04-小结" class="headerlink" title="04 小结"></a>04 小结</h2><hr>
+<p>具体比较深入的知识我就不细说了，上面只是前端学习比较大体的方向，而且这也是我本人的学习方向，并不代表前端就应该是这样子的过程。但是一般来说大部分同学都会经历这样的一个过程，学习总归是有一个步骤的，很多事情并不是一蹴而就的，相信大家可以根据自己的自身情况，打造出属于自己的学习路线。</p>
+<p>能够有自律的习惯就不要去报名培训机构，能够有钱的情况下多买几本书，现在的投资是对未来的负责。       </p>
+<p><img src="/2020/03/16/howToLearnFrontEnd/2.gif" alt=" ">                                                                                                   </p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-16T16:02:59.264Z" itemprop="dateUpdated">2020-03-17 00:02:59</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9D%9A%E6%8C%81/" rel="tag">坚持</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/" rel="tag">学习方法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%80%9D%E8%80%83/" rel="tag">思考</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%B7%AF%E7%BA%BF/" rel="tag">路线</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%9A%8F%E6%83%B3%E5%BD%95/" rel="tag">随想录</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/&title=《如何从零开始学习前端技术》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/&title=《如何从零开始学习前端技术》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何从零开始学习前端技术》 — 前端小时&url=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/17/frontKit/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">前端人应该有的工具箱</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/15/dnsAndArp/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">DNS与ARP的关系与原理解析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/&title=《如何从零开始学习前端技术》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/&title=《如何从零开始学习前端技术》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《如何从零开始学习前端技术》 — 前端小时&url=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/16/howToLearnFrontEnd/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

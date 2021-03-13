@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>密码学家的工具箱 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="安全,前端,密码,加密技术">
+    <meta name="description" content="“ 密码学，网络时代不可缺少的一部分”                                                                                                             01 前言 我们平时的手机、银行卡、各种社交账号都会给它设置一个密码，这样就减少别人盗用你账号的几率。而在现在的网络时代，更离不开密码的存在。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="密码学家的工具箱">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/03/secretBox/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="“ 密码学，网络时代不可缺少的一部分”                                                                                                             01 前言 我们平时的手机、银行卡、各种社交账号都会给它设置一个密码，这样就减少别人盗用你账号的几率。而在现在的网络时代，更离不开密码的存在。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/secretBox/640.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/secretBox/1.webp">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/secretBox/4.webp">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/secretBox/2.webp">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/secretBox/3.webp">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/03/secretBox/GIF2020-3-214-47-34.gif">
+<meta property="article:published_time" content="2020-03-02T23:53:08.000Z">
+<meta property="article:modified_time" content="2020-03-11T09:26:19.106Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="安全">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="密码">
+<meta property="article:tag" content="加密技术">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/03/secretBox/640.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">密码学家的工具箱</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">密码学家的工具箱</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-02T23:53:08.000Z" itemprop="datePublished" class="page-time">
+  2020-03-03
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%AE%89%E5%85%A8/">安全</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-加密与解密"><span class="post-toc-number">2.</span> <span class="post-toc-text">02 加密与解密</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#01-暴力破解"><span class="post-toc-number">2.0.0.1.</span> <span class="post-toc-text">01 暴力破解</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#02频率分析"><span class="post-toc-number">2.0.0.2.</span> <span class="post-toc-text">02频率分析</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-密码技术"><span class="post-toc-number">3.</span> <span class="post-toc-text">03 密码技术</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#01-对称加密"><span class="post-toc-number">3.0.0.1.</span> <span class="post-toc-text">01 对称加密</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#02-非对称加密"><span class="post-toc-number">3.0.0.2.</span> <span class="post-toc-text">02 非对称加密</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#03-单向散列函数"><span class="post-toc-number">3.0.0.3.</span> <span class="post-toc-text">03 单向散列函数</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#04-数字签名"><span class="post-toc-number">3.0.0.4.</span> <span class="post-toc-text">04 数字签名</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-小结"><span class="post-toc-number">4.</span> <span class="post-toc-text">04 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-secretBox"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">密码学家的工具箱</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-03 07:53:08" datetime="2020-03-02T23:53:08.000Z"  itemprop="datePublished">2020-03-03</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E5%AE%89%E5%85%A8/">安全</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p><strong>“</strong> 密码学，网络时代不可缺少的一部分<strong>”</strong></p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/secretBox/640.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>我们平时的手机、银行卡、各种社交账号都会给它设置一个密码，这样就减少别人盗用你账号的几率。而在现在的网络时代，更离不开密码的存在。假如没有密码的保护，别人捡到你的银行卡就可以取出所有的钱，捡到你的手机就可以直接拿来用，这些都是很可怕的事情。接下来我就总结一下，密码的领域，专家都有什么工具呢？</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/secretBox/1.webp" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="02-加密与解密"><a href="#02-加密与解密" class="headerlink" title="02 加密与解密"></a>02 加密与解密</h2><hr>
+<p>我们首先来看一个例子，小明同学给小红同学发送一封电子邮件，在没有加密的情况之下很容易就收到中间人的截取纂改，邮件内容有可能会被破坏。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/secretBox/4.webp" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>如果没有意外，那么加入密文没有被破解，那么信息还是安全的。但是假如中间人通过某种方式得到了密文，并且成功破解了然后进行纂改：“小红，明天准时上课”。那这样的话信息就不是小明的原本意思了。</p>
+<p>如果中间人截获了密文，有哪些方式可能会破解呢？</p>
+<ul>
+<li>暴力破解（穷举法）</li>
+<li>频率分析法</li>
+</ul>
+<h5 id="01-暴力破解"><a href="#01-暴力破解" class="headerlink" title="01 暴力破解"></a><strong>01 暴力破解</strong></h5><p>这种方法常用于比较简单的场景，比如你是知道这个密码空间（所有密码的可能性）是有限的，那么就可以通过这种方法进行破解。比如你的银行卡密码一般都是6位数，通过随机排列组合可以有720种方法，但是很可惜你输入3次不对就会冻结你的卡。</p>
+<p>如果没有限制的话，是可以得到你的密码的。我们也可以通过人的惯性思维来猜测密码，大部分人都是以生日来当作密码，那么我们可以从所有符合生日的密码来破解，大大减少难度。</p>
+<h5 id="02频率分析"><a href="#02频率分析" class="headerlink" title="02频率分析"></a><strong>02频率分析</strong></h5><p>我们先来了解一下凯撒密码，该密码诞生于公元前100年左右的古罗马，而他的发明人就是军事统领凯撒。他的思想就是把26个字母表通过平移 n 位来进行加密，所以一旦我们知道平移了多少位就可以正确破译密文。这里的n 就是密钥，也可以使用暴力破解进行破译。</p>
+<p>但是他也有一种频率分析的破译方法，找出密文中每一个字符的出现数量，然后猜测单词。</p>
+<p>使用哪种破译方法，可以根据密文来决定。</p>
+<h2 id="03-密码技术"><a href="#03-密码技术" class="headerlink" title="03 密码技术"></a>03 密码技术</h2><hr>
+<p>要想信息不被别人窃取，那么常用的加密技术有哪些呢？</p>
+<ul>
+<li>对称加密</li>
+<li>公钥密码（非对称加密）</li>
+<li>单向散列函数</li>
+<li>数字签名</li>
+</ul>
+<h5 id="01-对称加密"><a href="#01-对称加密" class="headerlink" title="01 对称加密"></a><strong>01 对称加密</strong></h5><p>说到对称加密，其实就是加密和解密公用一个密钥。这种方法的前提是双发都知道密钥是什么才可以正确解密。一旦密钥被窃取，加密也就没有意义。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/secretBox/2.webp" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h5 id="02-非对称加密"><a href="#02-非对称加密" class="headerlink" title="02 非对称加密"></a>02 <strong>非对称加密</strong></h5><p>非对称加密就是加密和解密不是使用同一种密码，这种加密的话一般破解难度不是一般的大。首先我们要知道公钥和私钥是一对的。如果我们了解HTTPS的话，就知道为什么是安全的。我们继续以小明和小红的例子讲解一下：</p>
+<ul>
+<li>小明给小红发送 ming_key</li>
+<li>小红给小明发送 ming_key 来加密 随机值</li>
+<li>小明收到后用私钥解密出来，得到随机值</li>
+<li>后续使用 随机值来进行加密</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/secretBox/3.webp" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h5 id="03-单向散列函数"><a href="#03-单向散列函数" class="headerlink" title="03 单向散列函数"></a><strong>03 单向散列函数</strong></h5><p>这种技术类似于http响应头的ETag，是标记了文件的一个值。一旦文件发生轻微的改变，这个值也是完全不一样的。利用这一种技术我们可以判断出来文件是否被他人纂改了。</p>
+<h5 id="04-数字签名"><a href="#04-数字签名" class="headerlink" title="04 数字签名"></a><strong>04 数字签名</strong></h5><p>这种签名的技术其实在我们生活中经常看到，比如请假条需要老师的签名，银行办理业务也需要本人的签名。这种签名就是为了防止以后你不认这件事情。</p>
+<p>那么网络中也是一样的道理，经过一种数字签名之后就是你的授权，可以通过这种技术防止你事后否认。签名技术是一种防止否认的密码技术。</p>
+<p>小结：</p>
+<ul>
+<li>确保信息的机密性：对称加密/非对称加密</li>
+<li>确保信息不被纂改：单向散列函数</li>
+<li>确保事后不可否认：数字签名</li>
+</ul>
+<h2 id="04-小结"><a href="#04-小结" class="headerlink" title="04 小结"></a>04 小结</h2><hr>
+<p>通过密码技术我们可以更加安全地保护我们的信息，然后使得网络的世界也多了很多安全。我们从不敢在网上购物到现在热衷于网购，其实就是密码加密技术保护我们的财产。</p>
+<p>网络当中存在着很多未知的因素，我们在一些网站中也要使用比较复杂的密码，不要使用一些简单数字结合的密码，因为会很容易被别人破解，输入一个特殊字符可能会使破译难度增加几个等级。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/03/secretBox/GIF2020-3-214-47-34.gif" alt="欢迎关注我的博客" title>
+                </div>
+                <div class="image-caption">欢迎关注我的博客</div>
+            </figure>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-11T09:26:19.106Z" itemprop="dateUpdated">2020-03-11 17:26:19</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E6%8A%80%E6%9C%AF/" rel="tag">加密技术</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AE%89%E5%85%A8/" rel="tag">安全</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%AF%86%E7%A0%81/" rel="tag">密码</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/03/secretBox/&title=《密码学家的工具箱》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/03/secretBox/&title=《密码学家的工具箱》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/03/secretBox/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《密码学家的工具箱》 — 前端小时&url=http://blog.alanwu.website/2020/03/03/secretBox/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/03/secretBox/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/03/scanCodeToLogin/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">微信扫码登录原理分析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/02/%E5%B0%8F%E7%99%BD%E4%B9%9F%E8%83%BD%E8%87%AA%E5%B7%B1%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">小白也能自己搭建博客</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/03/secretBox/&title=《密码学家的工具箱》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/03/secretBox/&title=《密码学家的工具箱》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/03/secretBox/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《密码学家的工具箱》 — 前端小时&url=http://blog.alanwu.website/2020/03/03/secretBox/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/03/secretBox/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/03/secretBox/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

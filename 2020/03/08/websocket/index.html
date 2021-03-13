@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>WebSocket 协议系统解析 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="前端,网络协议,websocket">
+    <meta name="description" content="WebSocket 协议系统解析 “读书之法, 在循序而渐进, 熟读而精思”                                                                                                                01 前言 早期的网站使用的是轮询技术，用来实现定时请求资源，由客户端发送HTTP请求。但是这种请求">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebSocket 协议系统解析">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/08/websocket/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="WebSocket 协议系统解析 “读书之法, 在循序而渐进, 熟读而精思”                                                                                                                01 前言 早期的网站使用的是轮询技术，用来实现定时请求资源，由客户端发送HTTP请求。但是这种请求">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/08/websocket/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/08/websocket/1.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/08/websocket/1.webp">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/08/websocket/2.gif">
+<meta property="article:published_time" content="2020-03-08T02:47:05.000Z">
+<meta property="article:modified_time" content="2020-03-08T03:01:23.012Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="网络协议">
+<meta property="article:tag" content="websocket">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/08/websocket/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">WebSocket 协议系统解析</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">WebSocket 协议系统解析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-08T02:47:05.000Z" itemprop="datePublished" class="page-time">
+  2020-03-08
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#WebSocket-协议系统解析"><span class="post-toc-number">1.</span> <span class="post-toc-text">WebSocket 协议系统解析</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-webSocket"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 webSocket</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-通信原理"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 通信原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-心跳包"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 心跳包</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#05-应用场景"><span class="post-toc-number">6.</span> <span class="post-toc-text">05 应用场景</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#06-与HTTP的异同"><span class="post-toc-number">7.</span> <span class="post-toc-text">06 与HTTP的异同</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#相同点"><span class="post-toc-number">7.0.0.1.</span> <span class="post-toc-text">相同点</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#不同点"><span class="post-toc-number">7.0.0.2.</span> <span class="post-toc-text">不同点</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#07-小结"><span class="post-toc-number">8.</span> <span class="post-toc-text">07 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-websocket"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">WebSocket 协议系统解析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-08 10:47:05" datetime="2020-03-08T02:47:05.000Z"  itemprop="datePublished">2020-03-08</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/">网络协议</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="WebSocket-协议系统解析"><a href="#WebSocket-协议系统解析" class="headerlink" title="WebSocket 协议系统解析"></a>WebSocket 协议系统解析</h2><blockquote>
+<p><strong>“</strong>读书之法, 在循序而渐进, 熟读而精思<strong>”</strong></p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/08/websocket/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>早期的网站使用的是轮询技术，用来实现定时请求资源，由客户端发送HTTP请求。但是这种请求可能存在很长的http请求头，真正的数据可能很少，这就造成了带宽的消耗。现在比较新的技术是Comet，可以实现全双工通信，但也需要反复发出请求，而且HTTP长连接在Comet中是普遍使用的，也会消耗服务器资源。</p>
+<p>所以为了解决上面的情况，HTML5定义了WebSocket协议，能够更好地节约服务器资源和带宽，并且能够实现实时通讯。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/08/websocket/1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="02-webSocket"><a href="#02-webSocket" class="headerlink" title="02 webSocket"></a>02 webSocket</h2><hr>
+<p>WebSocket与HTTP和HTTPS使用的是相同的TCP端口，由于这个的原因，可以绕过大多数的防火墙限制。默认是使用80端口，但是在TLS协议的时候会使用443端口。具体实现上是通过http协议建立通道，然后在此基础上用真正的WebSocket协议进行通信，所以WebSocket协议和http协议是有一定的交叉关系的。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/08/websocket/1.webp" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<p>该协议最大的特点是实现了服务端推送，以往获取资源只能由客户端发起，现在服务端可以主动发起了。实现了真正的全双工通信。它有以下的优点：</p>
+<ul>
+<li>较少的控制开销</li>
+<li>更强的实时性</li>
+<li>能够保持长连接</li>
+<li>更好的二进制支持</li>
+<li>可以支持扩展</li>
+<li>能够压缩数据提高效率</li>
+<li>没有同源限制</li>
+</ul>
+<h2 id="03-通信原理"><a href="#03-通信原理" class="headerlink" title="03 通信原理"></a>03 通信原理</h2><hr>
+<p>当客户端与服务端建立WebSocket连接，在客户端与服务端的握手过程中，客户端会先发送一个HTTP请求，包含一个Upgrade请求头来告诉服务端要升级为WebSocket协议。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> ws = <span class="keyword">new</span> WebSocket(<span class="string">'ws://localhost:9000'</span>);<span class="comment">//建立连接</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>发送请求头：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Host: localhost:<span class="number">9000</span></span><br><span class="line">Origin: http:<span class="comment">//localhost:9000</span></span><br><span class="line">Pragma: no-cache</span><br><span class="line">Sec-WebSocket-Extensions: permessage-deflate; client_max_window_bits</span><br><span class="line">Sec-WebSocket-Key: <span class="number">5</span>fTJ1LTuh3RKjSJxydyifQ== <span class="comment">// 与响应头 Sec-WebSocket-Accept 相对应</span></span><br><span class="line">Sec-WebSocket-Version: <span class="number">13</span>    <span class="comment">// 表示 websocket 协议的版本</span></span><br><span class="line">Upgrade: websocket    <span class="comment">// 表示要升级到 websocket 协议</span></span><br></pre></td></tr></table></figure>
+
+<p>响应头：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Connection: Upgrade</span><br><span class="line">Sec-WebSocket-Accept: ZUip34t+bCjhkvxxwhmdEOyx9hE=</span><br><span class="line">Upgrade: websocket</span><br></pre></td></tr></table></figure>
+
+<p>此时如果正常，服务器就会返回101状态码并切换为WebSocket协议建立全双工连接，后续信息将会通过这个协议进行传输。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GUID = <span class="string">"258EAFA5-E914-47DA-95CA-C5AB0DC85B11"</span>; <span class="comment">//  一个固定的字符串</span></span><br><span class="line">accept = base64(sha1(key + GUID));    </span><br><span class="line"><span class="comment">// key 就是 Sec-WebSocket-Key 值，</span></span><br><span class="line"><span class="comment">//accept 就是 Sec-WebSocket-Accept 值</span></span><br></pre></td></tr></table></figure>
+
+<p>Sec-WebSocket-Key：客户端随机生成的一个base64编码</p>
+<p>Sec-WebSocket-Accept：服务端经过算法处理后回传给客户端</p>
+<p>Connection和Upgrade字段告诉服务器，客户端发起的是WebSocket协议请求</p>
+<p>最后一步客户端拿到服务端的值之后使用相同算法进行解码之后，跟服务端的进行对比，如果一致则成功连接。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">connectWebsocket</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    ws = <span class="keyword">new</span> WebSocket(<span class="string">'ws://localhost:9000'</span>);</span><br><span class="line">    <span class="comment">// 监听连接成功</span></span><br><span class="line">    ws.onopen = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'连接服务端WebSocket成功'</span>);</span><br><span class="line">        <span class="comment">// send 方法给服务端发送消息</span></span><br><span class="line">        ws.send(<span class="built_in">JSON</span>.stringify(msgData));    </span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听服务端消息(接收消息)</span></span><br><span class="line">    ws.onmessage = <span class="function">(<span class="params">msg</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> message = <span class="built_in">JSON</span>.parse(msg.data);</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'收到的消息：'</span>, message)</span><br><span class="line">        elUl.innerHTML += <span class="string">`&lt;li class="b"&gt;小秋：<span class="subst">$&#123;message.content&#125;</span>&lt;/li&gt;`</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听连接失败</span></span><br><span class="line">    ws.onerror = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'连接失败，正在重连...'</span>);</span><br><span class="line">        connectWebsocket();</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听连接关闭</span></span><br><span class="line">    ws.onclose = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'连接关闭'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line">connectWebsocket();</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="04-心跳包"><a href="#04-心跳包" class="headerlink" title="04 心跳包"></a>04 心跳包</h2><hr>
+<p>当连接后长时间不进行通信就可能会出现连接不稳定的情况，那么就会影响数据的传输，比如在聊天室的信息可能出现不同步的情况。所以客户端会定时发送一个包告诉服务器我连接正常，服务器也会回应正常。称之为心跳包。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setInterval(<span class="function"><span class="params">()</span> =&gt;</span> &#123;    ws.send(<span class="string">'这是一条心跳包消息'</span>);&#125;, <span class="number">60000</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="05-应用场景"><a href="#05-应用场景" class="headerlink" title="05 应用场景"></a>05 应用场景</h2><hr>
+<p>WebSocket协议多用于实时通讯方面的场景，对实时数据要求比较高的，可以应用于以下的场景：</p>
+<ul>
+<li>即时聊天通信</li>
+<li>多玩家游戏</li>
+<li>在线协同编辑/编辑</li>
+<li>实时数据流的拉取与推送</li>
+<li>体育/游戏实况</li>
+<li>实时地图位置</li>
+</ul>
+<h2 id="06-与HTTP的异同"><a href="#06-与HTTP的异同" class="headerlink" title="06 与HTTP的异同"></a>06 与HTTP的异同</h2><hr>
+<h5 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a><strong>相同点</strong></h5><ul>
+<li>都是基于TCP的应用层协议；</li>
+<li>都使用Request/Response模型进行连接的建立；</li>
+<li>在连接的建立过程中对错误的处理方式相同，在这个阶段WS可能返回和HTTP相同的返回码；</li>
+<li>都可以在网络中传输数据。</li>
+</ul>
+<h5 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a><strong>不同点</strong></h5><ul>
+<li>WS使用HTTP来建立连接，但是定义了一系列新的header域，这些域在HTTP中并不会使用；</li>
+<li>WS的连接不能通过中间人来转发，它必须是一个直接连接；</li>
+<li>WS连接建立之后，通信双方都可以在任何时刻向另一方发送数据；</li>
+<li>WS连接建立之后，数据的传输使用帧来传递，不再需要Request消息；</li>
+<li>WS的数据帧有序。</li>
+</ul>
+<h2 id="07-小结"><a href="#07-小结" class="headerlink" title="07 小结"></a>07 小结</h2><hr>
+<p>WebSocket可写的东西还挺多，比如WebSocket扩展。客户端、服务端之间是如何协商、使用扩展的。WebSocket扩展可以给协议本身增加很多能力和想象空间，比如数据的压缩、加密，以及多路复用等。理论还是要联系实际才可以。</p>
+<p><strong><font color="green">参考文章</font></strong></p>
+<ul>
+<li>WebSocket教程 阮一峰博客</li>
+<li>深入剖析WebSocket的原理</li>
+<li>WebSocket详解（四）：刨根问底HTTP与WebSocket的关系</li>
+<li>维基百科 WebSocket</li>
+<li>WebSocket 原理浅析与实现简单聊</li>
+</ul>
+<p><img src="/2020/03/08/websocket/2.gif" alt></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-08T03:01:23.012Z" itemprop="dateUpdated">2020-03-08 11:01:23</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/websocket/" rel="tag">websocket</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/" rel="tag">网络协议</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/08/websocket/&title=《WebSocket 协议系统解析》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/08/websocket/&title=《WebSocket 协议系统解析》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/08/websocket/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《WebSocket 协议系统解析》 — 前端小时&url=http://blog.alanwu.website/2020/03/08/websocket/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/08/websocket/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/08/https/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">面试官：讲一下 https 和 http 的区别</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/07/cssFilter/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">带你一文玩转CSS滤镜</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/08/websocket/&title=《WebSocket 协议系统解析》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/08/websocket/&title=《WebSocket 协议系统解析》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/08/websocket/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《WebSocket 协议系统解析》 — 前端小时&url=http://blog.alanwu.website/2020/03/08/websocket/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/08/websocket/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/08/websocket/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Node.js之Buffer对象浅析 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="前端,Buffer,Node,内存分配">
+    <meta name="description" content="Node.js之Buffer对象浅析 “ 前端开发的盲点，Node开发的基础”                                                                                                                01 前言 前端的开发人员一般是不会去关注Buffer的对象的，在大多数人看来前端就是写页面的程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node.js之Buffer对象浅析">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/04/buffer/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="Node.js之Buffer对象浅析 “ 前端开发的盲点，Node开发的基础”                                                                                                                01 前言 前端的开发人员一般是不会去关注Buffer的对象的，在大多数人看来前端就是写页面的程序">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/buffer/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/buffer/1.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/buffer/4.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/buffer/2.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/buffer/3.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/buffer/6.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/buffer/5.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/04/buffer/2.gif">
+<meta property="article:published_time" content="2020-03-04T10:12:54.000Z">
+<meta property="article:modified_time" content="2020-03-05T01:26:56.043Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="Buffer">
+<meta property="article:tag" content="Node">
+<meta property="article:tag" content="内存分配">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/04/buffer/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Node.js之Buffer对象浅析</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Node.js之Buffer对象浅析</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-04T10:12:54.000Z" itemprop="datePublished" class="page-time">
+  2020-03-04
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Node/">Node</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Node-js之Buffer对象浅析"><span class="post-toc-number">1.</span> <span class="post-toc-text">Node.js之Buffer对象浅析</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-Buffer"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 Buffer</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-内存管理模型"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 内存管理模型</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-Buffer内存分配"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 Buffer内存分配</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#①小对象内存分配"><span class="post-toc-number">5.0.0.1.</span> <span class="post-toc-text">①小对象内存分配</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#②大对象内存分配"><span class="post-toc-number">5.0.0.2.</span> <span class="post-toc-text">②大对象内存分配</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#05-小结"><span class="post-toc-number">6.</span> <span class="post-toc-text">05 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-buffer"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Node.js之Buffer对象浅析</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-04 18:12:54" datetime="2020-03-04T10:12:54.000Z"  itemprop="datePublished">2020-03-04</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Node/">Node</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="Node-js之Buffer对象浅析"><a href="#Node-js之Buffer对象浅析" class="headerlink" title="Node.js之Buffer对象浅析"></a>Node.js之Buffer对象浅析</h2><blockquote>
+<p><strong>“</strong> 前端开发的盲点，Node开发的基础<strong>”</strong></p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/04/buffer/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>前端的开发人员一般是不会去关注Buffer的对象的，在大多数人看来前端就是写页面的程序员，但现在随着Node的发展，越来越多的前端工程师关注一些后端的开发流程。撇开前端的业务开发，我们来了解一下Node的工作都和哪些知识点打交道。</p>
+<p>与应用型的场景不一样，Node中需要处理网络协议、操作数据库、处理图片、接受上传文件等。我们知道在网络当中，数据都是以二进制的形式传播，现有的JavaScript已经不能满足要求了，所以Buffer应运而生。</p>
+<h2 id="02-Buffer"><a href="#02-Buffer" class="headerlink" title="02 Buffer"></a>02 Buffer</h2><hr>
+<p>Buffer是一个像Array的对象，它的元素都是16进制的两位数。是一个典型的JavaScript与C++结合的模块，设计性能的相关部分采用了C++实现，而非性能部分采用了JavaScript实现。<strong><font color="orange">Buffer对象可以用来操作二进制数据流</font></strong>。</p>
+<p>由于Buffer经常用于字符串以及大文件等操作，我们知道Node有垃圾收集机制，大对象不太可能存放在堆中，不然内存很快就会满了。buffer所占用的内存其实不是堆中的，而是堆外内存。Node在加载的时候就已经加载这个对象，并把它放在了全局对象上面。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/04/buffer/1.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="03-内存管理模型"><a href="#03-内存管理模型" class="headerlink" title="03 内存管理模型"></a>03 内存管理模型</h2><hr>
+<p>Node程序在运行过程中，此进程占据的所有内存成为常驻内存。它由以下几个部分组成：</p>
+<ul>
+<li>代码区</li>
+<li>栈</li>
+<li>堆</li>
+<li>堆外内存</li>
+</ul>
+<p>他们之间的关系如下图：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/04/buffer/4.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="04-Buffer内存分配"><a href="#04-Buffer内存分配" class="headerlink" title="04 Buffer内存分配"></a>04 Buffer内存分配</h2><hr>
+<p>我们知道，<strong><font color="orange">Buffer对象的内存分配不是在V8的堆内存中的，而是由Node的C++层面实现的内存申请的</font></strong>。由于大对象的存储空间是不确定的，不可能向操作系统申请，会对操作系统造成压力。所以Node在内存的使用上面应用的是C++层面申请内存，在JavaScript中分配内存的策略。</p>
+<p>那么它的具体分配策略是怎么样的呢？大对象和小对象的分配方式采用的算法是否是一样的呢？</p>
+<p>首先来介绍一下 <strong><font color="orange">slab 内存分配机制</font></strong>。它是一种动态内存管理机制，采用的是<strong><font color="orange">预先申请，事后分配</font></strong>的方式，简单来说它就是一块申请好的固定大小的内存区域。有如下3种状态：</p>
+<ul>
+<li>full：完全分配</li>
+<li>partial：部分分配</li>
+<li>empty：没有被分配</li>
+</ul>
+<p>这种机制是以 <strong><font color="orange">8KB为界限</font></strong>来决定当前分配的对象是大对象还是小对象，也就是每一个slab的值。在JavaScript层面以它作为单位单元进行内存的分配。</p>
+<h5 id="①小对象内存分配"><a href="#①小对象内存分配" class="headerlink" title="①小对象内存分配"></a><strong>①小对象内存分配</strong></h5><p>我们在这里引入一个pool局部对象，Buffer在小对象的分配过程中会使用pool作为中间处理对象。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/04/buffer/2.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>上图这个是刚申请的slab内存块的状态是 empty 状态，等待被分配，而下图是被两个小对象分配后的状态，为partial状态。值得注意的是，在一个小对象分配之前会判断这个 pool 空间是否还够，如果不够的话就会重新申请一块新的8KB内存来分配。</p>
+<p>所以一块 slab 可以被多个对象占有，加入第一次分配了1KB，但是下一个内存则要8KB，那么就造成了内存的浪费。这个1KB的小对象就占据了一整块内存。而且内存的释放规则是所有的对象释放之后，这块8KB的slab才会回收。</p>
+<p>V8 GC 对其不直接起作用，Buffer 对象被 GC 的时候会触发一个回调（C++ 层面的回调），而 Node.js 源码中定义的那个回调里面做的事就是释放那块内存。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/04/buffer/3.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h5 id="②大对象内存分配"><a href="#②大对象内存分配" class="headerlink" title="②大对象内存分配"></a><strong>②大对象内存分配</strong></h5><p>如果这个对象是超过了 slab 的大小，那么就不会占用slab块，直接使用C++层面分配你所需要的大小，这块空间就会被你一直占有。举个简单的例子就是：</p>
+<p>就像银行办理普通业务的客人一样，都规矩地在前台办理，但是VIP客户可以直接找银行行长。这里每一位银行业务员都是一个个slab，都是预先分配好的，然后VIP客人的需求可能更大，那么就直接找行长办理，无需繁杂的手续。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/04/buffer/6.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>这里我们总结一下，<strong><font color="orange">Buffer对象都是在JavaScript层面的，能够被V8的垃圾回收机制标记回收的</font></strong>。但是Buffer操作的字节真正的内存是在Node的C++层面提供的，JavaScript层面只是使用它。不论是小 Buffer 对象还是大 Buffer 对象，内存分配是在 C++ 层面完成，内存管理在 JavaScript 层面。如果解除两者的引用，Buffer对象最终还是可以被 V8 的垃圾回收标记所回收。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/04/buffer/5.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="05-小结"><a href="#05-小结" class="headerlink" title="05 小结"></a>05 小结</h2><p>Buffer对象是Node服务端的一个重要的概念，占据着很重要的位置。不论我们读写文件还是网络请求都会用到这个对象，可能前端的开发人员不会过多关注这个东西。</p>
+<p>通过对buffer对象的内存分配，我们在以后的编程当中应该时刻关注着变量的分配，因为如果内存一旦泄露，1G的服务器内存也会很快地被占用完，严重的话会造成服务器的崩溃。</p>
+<p><strong><font color="green">参考文章</font></strong></p>
+<ul>
+<li>深入浅出Node.js</li>
+<li>探究不在V8堆内存中存储得Buffer对象</li>
+</ul>
+<p><img src="/2020/03/04/buffer/2.gif" alt></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-05T01:26:56.043Z" itemprop="dateUpdated">2020-03-05 09:26:56</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Buffer/" rel="tag">Buffer</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Node/" rel="tag">Node</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/" rel="tag">内存分配</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag">前端</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/04/buffer/&title=《Node.js之Buffer对象浅析》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/04/buffer/&title=《Node.js之Buffer对象浅析》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/04/buffer/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Node.js之Buffer对象浅析》 — 前端小时&url=http://blog.alanwu.website/2020/03/04/buffer/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/04/buffer/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/05/tcpAndUdp/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">一文读懂TCP和UDP的区别</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/04/Authorization/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">关于前后端鉴权的几种方式</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/04/buffer/&title=《Node.js之Buffer对象浅析》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/04/buffer/&title=《Node.js之Buffer对象浅析》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/04/buffer/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Node.js之Buffer对象浅析》 — 前端小时&url=http://blog.alanwu.website/2020/03/04/buffer/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/04/buffer/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/04/buffer/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

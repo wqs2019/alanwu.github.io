@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', '[object Object]', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>一文读懂TCP和UDP的区别 | 前端小时 | 紧跟前端潮流，囊括前端开发、Node开发、移动开发以及小程序开发等技术文章，还有前端面试心得体会，带你玩转一线互联网大厂！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="计算机网络,网络协议,tcp/udp">
+    <meta name="description" content="网络协议TCP和UDP的区别 “ 读懂此文，从此又少一个问题”                                                                                                                01 前言 前端工程师跟网络打交道的时间不比网络工程师的少，浏览器就是我们天天都要用的，发送请求&#x2F;响应数据其中的过">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一文读懂TCP和UDP的区别">
+<meta property="og:url" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/index.html">
+<meta property="og:site_name" content="前端小时">
+<meta property="og:description" content="网络协议TCP和UDP的区别 “ 读懂此文，从此又少一个问题”                                                                                                                01 前言 前端工程师跟网络打交道的时间不比网络工程师的少，浏览器就是我们天天都要用的，发送请求&#x2F;响应数据其中的过">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/1.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/tcp_upd-featured.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/tcp.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/udp.gif">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/diff.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/tcp_head.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/udp_head.png">
+<meta property="og:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/2.gif">
+<meta property="article:published_time" content="2020-03-05T03:28:33.000Z">
+<meta property="article:modified_time" content="2020-03-05T06:23:04.028Z">
+<meta property="article:author" content="Alan Wu">
+<meta property="article:tag" content="计算机网络">
+<meta property="article:tag" content="网络协议">
+<meta property="article:tag" content="tcp&#x2F;udp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://blog.alanwu.website/2020/03/05/tcpAndUdp/1.gif">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/A-limon/pacman/master/source/img/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">Alan Wu</h5>
+          <a href="mailto:1196828446@qq.com" title="1196828446@qq.com" class="mail">1196828446@qq.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/wqs2019" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://www.zhihu.com/people/wu-qing-shi-27-21" target="_blank" >
+                <i class="icon icon-lg icon-address-book"></i>
+                知乎
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://juejin.im/user/5c7a4b4f51882507ae09d7b8" target="_blank" >
+                <i class="icon icon-lg icon-envelope-open"></i>
+                掘金
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://blog.csdn.net/weixin_42724176" target="_blank" >
+                <i class="icon icon-lg icon-rss-square"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">一文读懂TCP和UDP的区别</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">一文读懂TCP和UDP的区别</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-03-05T03:28:33.000Z" itemprop="datePublished" class="page-time">
+  2020-03-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#网络协议TCP和UDP的区别"><span class="post-toc-number">1.</span> <span class="post-toc-text">网络协议TCP和UDP的区别</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-前言"><span class="post-toc-number">2.</span> <span class="post-toc-text">01 前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-协议介绍"><span class="post-toc-number">3.</span> <span class="post-toc-text">02 协议介绍</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#TCP"><span class="post-toc-number">3.0.0.1.</span> <span class="post-toc-text">TCP</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#UDP"><span class="post-toc-number">3.0.0.2.</span> <span class="post-toc-text">UDP</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-协议比较"><span class="post-toc-number">4.</span> <span class="post-toc-text">03 协议比较</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#04-应用场景"><span class="post-toc-number">5.</span> <span class="post-toc-text">04 应用场景</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#05-小结"><span class="post-toc-number">6.</span> <span class="post-toc-text">05 小结</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-tcpAndUdp"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">一文读懂TCP和UDP的区别</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-03-05 11:28:33" datetime="2020-03-05T03:28:33.000Z"  itemprop="datePublished">2020-03-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="网络协议TCP和UDP的区别"><a href="#网络协议TCP和UDP的区别" class="headerlink" title="网络协议TCP和UDP的区别"></a>网络协议TCP和UDP的区别</h2><blockquote>
+<p>“ 读懂此文，从此又少一个问题”</p>
+</blockquote>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/05/tcpAndUdp/1.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+
+
+<h2 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h2><hr>
+<p>前端工程师跟网络打交道的时间不比网络工程师的少，浏览器就是我们天天都要用的，发送请求/响应数据其中的过程都要通过网络协议，所以网络协议已经成为前端的必要掌握知识了。而TCP和UDP协议是最关键也是最常见的两个协议，下面我们就来好好总结一下。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/05/tcpAndUdp/tcp_upd-featured.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<h2 id="02-协议介绍"><a href="#02-协议介绍" class="headerlink" title="02 协议介绍"></a>02 协议介绍</h2><hr>
+<h5 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a><strong>TCP</strong></h5><p>TCP是一种面向来连接的、可靠的、基于字节流的传输层通信协议。在计算机网络的OSI模型中，它完成第四层传输层所指定的功能。</p>
+<p><strong>面向连接</strong>：数据在发送之前必须在两端建立连接，方法就是我们熟知的三次握手连接。</p>
+<p><strong>可靠传输</strong>：通过多种机制来保证数据的正确传输，比如序列号/确认应答机制、检验和机制、超时重传机制、流量控制、拥塞避免机制等。</p>
+<p><strong>基于字节流</strong>：虽然应用程序和TCP的交互是一次一个数据块（大小不等），但TCP把应用程序看成是一连串的无结构的字节流。TCP有一个缓冲，当应用程序传送的数据块太长，TCP就可以把它划分短一些再传送。如果应用程序一次只发送一个字节，TCP也可以等待积累有足够多的字节后再构成报文段发送出去。</p>
+<p><strong><font color="red">特点</font></strong>：</p>
+<ul>
+<li>面向连接</li>
+<li>仅支持单播传输</li>
+<li>面向字节流</li>
+<li>可靠传输</li>
+<li>提供全双工通信</li>
+</ul>
+<h5 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a><strong>UDP</strong></h5><p>UDP是一种简单的面向数据报、面向无连接、不可靠的通信协议，位于OSI模型的传输层。在网络中它与TCP协议一样用于处理数据包，是一种无连接的协议。</p>
+<p><strong>面向无连接</strong>：UDP 是不需要和 TCP一样在发送数据前进行三次握手建立连接的，想发数据就可以开始发送了。并且也只是数据报文的搬运工，不会对数据报文进行任何拆分和拼接操作。</p>
+<p><strong>不可靠</strong>：不可靠性体现在无连接上，通信都不需要建立连接，想发就发，这样的情况肯定不可靠。并且收到什么数据就传递什么数据，并且也不会备份数据，发送数据也不会关心对方是否已经正确接收到数据了。</p>
+<p><strong>面向报文</strong>：面向报文的传输方式是应用层交给UDP多长的报文，UDP就照样发送，即一次发送一个报文。UDP对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界，照样发送。</p>
+<p>再者网络环境时好时坏，但是 UDP 因为没有拥塞控制，一直会以恒定的速度发送数据。即使网络条件不好，也不会对发送速率进行调整。这样实现的弊端就是在网络条件不好的情况下可能会导致丢包，但是优点也很明显，在某些实时性要求高的场景（比如电话会议）就需要使用 UDP 而不是 TCP。</p>
+<p><strong><font color="red">特点</font></strong>：</p>
+<ul>
+<li>面向无连接</li>
+<li>不可靠传输</li>
+<li>提供单播、多播和广播</li>
+<li>面向报文</li>
+</ul>
+<h2 id="03-协议比较"><a href="#03-协议比较" class="headerlink" title="03 协议比较"></a>03 协议比较</h2><hr>
+<p><strong><font color="green">01 图解过程</font></strong></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/05/tcpAndUdp/tcp.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/05/tcpAndUdp/udp.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p><strong><font color="green">02 特性比较</font></strong></p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/05/tcpAndUdp/diff.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p><strong><font color="green">03 头部比较</font></strong></p>
+<p><img src="/2020/03/05/tcpAndUdp/tcp_head.png" alt></p>
+<ul>
+<li><p>来源连接端口（16位长）－识别发送连接端口</p>
+</li>
+<li><p>目的连接端口（16位长）－识别接收连接端口</p>
+</li>
+<li><p>序列号（seq，32位长）</p>
+<ul>
+<li>如果含有同步化旗标（SYN），则此为最初的序列号；第一个数据比特的序列码为本序列号加一。</li>
+<li>如果没有同步化旗标（SYN），则此为第一个数据比特的序列码。</li>
+</ul>
+</li>
+<li><p>确认号（ack，32位长）—期望收到的数据的开始序列号。也即已经收到的数据的字节长度加1。</p>
+</li>
+<li><p>数据偏移（4位长）—表示数据部分应该从TCP包的哪个部分开始计算，也可看作TCP首部长度。</p>
+</li>
+<li><p>保留（3比特长）—须置0，但如果收到的包在该字段，此包也不会丢弃。</p>
+</li>
+<li><p>标志符（9比特长）</p>
+<ul>
+<li>NS—ECN-nonce。ECN显式拥塞通知（Explicit Congestion Notification）是对TCP的扩展，定义于RFC 3540（2003）。ECN允许拥塞控制的端对端通知而避免丢包。ECN为一项可选功能，如果底层网络设施支持，则可能被启用ECN的两个端点使用。在ECN成功协商的情况下，ECN感知路由器可以在IP头中设置一个标记来代替丢弃数据包，以标明阻塞即将发生。数据包的接收端回应发送端的表示，降低其传输速率，就如同在往常中检测到包丢失那样。</li>
+<li>CWR—与ECE标志都用于IP首部的ECN字段，当ECE标志为1时，通知对方已将拥塞窗口缩小。</li>
+<li>ECE—置为1时通知对方到这边的网络有拥塞。</li>
+<li>URG—为1表示高优先级数据包，紧急指针字段有效。</li>
+<li>ACK—为1表示确认应答有效</li>
+<li>PSH—为1表示是带有PUSH标志的数据，指示接收方应该尽快将这个报文段交给应用层而不用等待缓冲区装满。</li>
+<li>RST—为1表示出现严重差错，必须强制断开连接。</li>
+<li>SYN—为1表示希望建立连接。</li>
+<li>FIN—为1表示发送方没有数据要传输了，要求释放连接。</li>
+</ul>
+</li>
+<li><p>窗口（WIN，16位长）—表示从确认号开始，本报文的发送方可以接收的字节数，即接收窗口大小。用于流量控制。</p>
+</li>
+<li><p>校验和（Checksum，16位长）—对整个的TCP报文段，包括TCP头部和TCP数据，以16位字进行计算所得。这是一个强制性的字段。</p>
+</li>
+<li><p>紧急指针（16位长）—本报文段中的紧急数据的最后一个字节的序号。</p>
+</li>
+<li><p>选项字段—用于提高TCP传输性能，最大长度40字节。</p>
+<hr>
+</li>
+</ul>
+<p><img src="/2020/03/05/tcpAndUdp/udp_head.png" alt></p>
+<ul>
+<li>来源连接端口（16位长）－识别发送连接端口</li>
+<li>目的连接端口（16位长）－识别接收连接端口</li>
+<li>报文长度：保存了UDP首部和数据的长度之和</li>
+<li>检验和：为了提供可靠的UDP传输而设计的</li>
+</ul>
+<h2 id="04-应用场景"><a href="#04-应用场景" class="headerlink" title="04 应用场景"></a>04 应用场景</h2><hr>
+<p>由于TCP保证数据的可靠传输，所以互联网上的很多场景都会使用TCP协议，比如网页浏览、信息发送、文件传输等，可以保证了数据的完整性。</p>
+<p>相比于TCP，UDP更适用于实时通信的场景，因为丢了几个包对整体的影响不大，比如视频会议，直播等。</p>
+<h2 id="05-小结"><a href="#05-小结" class="headerlink" title="05 小结"></a>05 小结</h2><hr>
+<p>我们通过讲解TCP和UDP的区别，也知道它们对应的应用场景以及他们的关系。其实两者都是属于传输层的协议，为的就是传输数据是以何种方式而已。TCP的头部有20字节，协议传输会消耗更多的资源，但是保证数据的传输；而UDP头部只有8个字节，传输相对消耗较少，但是不保证数据的传输。</p>
+<p><strong><font color="green">参考文章</font></strong></p>
+<ul>
+<li>维基百科 TCP/UDP</li>
+<li>fundebug 一文TCP与UDP的区别</li>
+</ul>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/2020/03/05/tcpAndUdp/2.gif" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2020-03-05T06:23:04.028Z" itemprop="dateUpdated">2020-03-05 14:23:04</time>
+</span><br>
+
+
+        
+        喜欢前端技术的小伙伴可以关注我的公众号 《前端小时》
+        
+    </div>
+    
+    <footer>
+        <a href="http://blog.alanwu.website">
+            <img src="/img/avatar.jpg" alt="Alan Wu">
+            Alan Wu
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/tcp-udp/" rel="tag">tcp/udp</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C%E5%8D%8F%E8%AE%AE/" rel="tag">网络协议</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/" rel="tag">计算机网络</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/05/tcpAndUdp/&title=《一文读懂TCP和UDP的区别》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/05/tcpAndUdp/&title=《一文读懂TCP和UDP的区别》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/05/tcpAndUdp/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《一文读懂TCP和UDP的区别》 — 前端小时&url=http://blog.alanwu.website/2020/03/05/tcpAndUdp/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/05/tcpAndUdp/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2020/03/05/createNull/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Object.create()函数浅析</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2020/03/04/buffer/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Node.js之Buffer对象浅析</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license noopener" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>Alan Wu &copy; 2020 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.alanwu.website/2020/03/05/tcpAndUdp/&title=《一文读懂TCP和UDP的区别》 — 前端小时&pic=http://blog.alanwu.website/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.alanwu.website/2020/03/05/tcpAndUdp/&title=《一文读懂TCP和UDP的区别》 — 前端小时&source=专注于前端领域的技术，喜欢代码、运动和交友。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.alanwu.website/2020/03/05/tcpAndUdp/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《一文读懂TCP和UDP的区别》 — 前端小时&url=http://blog.alanwu.website/2020/03/05/tcpAndUdp/&via=http://blog.alanwu.website" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.alanwu.website/2020/03/05/tcpAndUdp/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://blog.alanwu.website/2020/03/05/tcpAndUdp/" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
